@@ -2,7 +2,6 @@ using Application.Common.Interfaces;
 using Infrastructure.Context;
 using Infrastructure.Interceptors;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,7 +9,7 @@ namespace Infrastructure;
 
 public static class ConfigureService
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddTransient<IDataContext>(provider => provider.GetRequiredService<DataContext>());
         services.AddScoped<AuditableEntitySaveChangesInterceptor>();
@@ -28,7 +27,5 @@ public static class ConfigureService
                     "Host=localhost;Port=5432;Database=receivables-flow;Username=postgres;Password=postgres");
             });
         }
-
-        return services;
     }
 }

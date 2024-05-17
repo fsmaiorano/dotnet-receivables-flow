@@ -5,7 +5,7 @@ namespace Api;
 
 public static class ConfigureServices
 {
-    public static IServiceCollection AddApi(this IServiceCollection services)
+    public static void AddApi(this IServiceCollection services)
     {
         services.AddRouting(options => options.LowercaseUrls = true);
         services.Configure<JsonOptions>(options =>
@@ -13,7 +13,5 @@ public static class ConfigureServices
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
         services.AddHttpContextAccessor();
-
-        return services;
     }
 }
