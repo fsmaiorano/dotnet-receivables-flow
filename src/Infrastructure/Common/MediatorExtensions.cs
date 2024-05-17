@@ -6,7 +6,7 @@ namespace Infrastructure.Common;
 
 public static class MediatorExtensions
 {
-    public static async Task DispatchDomainEvents(this IMediator mediator, DbContext context)
+    public static async Task DispatchDomainEvents(this IMediator? mediator, DbContext context)
     {
         var entities = context.ChangeTracker
             .Entries<BaseEntity>()
@@ -21,6 +21,7 @@ public static class MediatorExtensions
         baseEntities.ToList().ForEach(e => e.ClearDomainEvents());
 
         foreach (var domainEvent in domainEvents)
-            await mediator.Publish(domainEvent);
+            if (mediator != null)
+                await mediator.Publish(domainEvent);
     }
 }
