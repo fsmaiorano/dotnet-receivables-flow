@@ -9,25 +9,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8554680b-a609-44c6-9875-705d16b86856" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.ReceivablesFlow/.idea/.name" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.ReceivablesFlow/.idea/indexLayout.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.ReceivablesFlow/.idea/projectSettingsUpdater.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.ReceivablesFlow/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ReceivablesFlow.sln" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Api/Api.csproj" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Api/Api.http" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Api/Program.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Api/Properties/launchSettings.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Api/appsettings.Development.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Api/appsettings.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Application/Application.csproj" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Application/Class1.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Domain/Common/BaseEntity.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Domain/Domain.csproj" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Infrastructure/Class1.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Infrastructure/Infrastructure.csproj" afterDir="false" />
+    <list default="true" id="8554680b-a609-44c6-9875-705d16b86856" name="Changes" comment="first commit">
+      <change afterPath="$PROJECT_DIR$/src/Domain/Entities/AssignorEntity.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Domain/Entities/PayableEntity.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Infrastructure/Mapping/AssignorMap.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.ReceivablesFlow/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ReceivablesFlow/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Application/Application.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Application/Application.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Domain/Common/BaseEntity.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Domain/Common/BaseEntity.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Infrastructure/Class1.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Infrastructure/Infrastructure.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Infrastructure/Infrastructure.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,6 +27,7 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectColorInfo"><![CDATA[{
   "associatedIndex": 0
 }]]></component>
@@ -59,6 +50,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "editor.preferences.smartKeys_rider",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
@@ -128,16 +120,28 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1715969841061</updated>
-      <workItem from="1715969843103" duration="594000" />
+      <workItem from="1715969843103" duration="1633000" />
     </task>
+    <task id="LOCAL-00001" summary="first commit">
+      <option name="closed" value="true" />
+      <created>1715970641396</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1715970641396</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+    <MESSAGE value="first commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="first commit" />
   </component>
 </project>
