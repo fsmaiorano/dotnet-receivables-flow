@@ -9,14 +9,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8554680b-a609-44c6-9875-705d16b86856" name="Changes" comment="add workspace configuration">
-      <change afterPath="$PROJECT_DIR$/src/Domain/Entities/AssignorEntity.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Domain/Entities/PayableEntity.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Infrastructure/Mapping/AssignorMap.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Infrastructure/Mapping/PayableMap.cs" afterDir="false" />
+    <list default="true" id="8554680b-a609-44c6-9875-705d16b86856" name="Changes" comment="update workspace.xml">
+      <change afterPath="$PROJECT_DIR$/src/Application/Common/Interfaces/IDataContext.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Domain/Common/BaseAuditableEntity.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Infrastructure/Common/MediatorExtensions.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Infrastructure/ConfigureService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Infrastructure/Context/DataContext.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Infrastructure/Interceptors/AuditableEntitySaveChangesInterceptor.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.ReceivablesFlow/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ReceivablesFlow/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Api/Api.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/Api.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Api/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Api/Program.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Application/Application.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Application/Application.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Domain/Common/BaseEntity.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Domain/Common/BaseEntity.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Infrastructure/Class1.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Domain/Domain.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Domain/Domain.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Infrastructure/Infrastructure.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Infrastructure/Infrastructure.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -26,6 +31,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="mock://F:/projects/dotnet/dotnet-receivables-flow/src/Domain/Common/BaseEntity.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectColorInfo"><![CDATA[{
@@ -120,7 +128,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1715969841061</updated>
-      <workItem from="1715969843103" duration="1958000" />
+      <workItem from="1715969843103" duration="3338000" />
     </task>
     <task id="LOCAL-00001" summary="first commit">
       <option name="closed" value="true" />
@@ -138,7 +146,47 @@
       <option name="project" value="LOCAL" />
       <updated>1715971820143</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="add entity framework and mediatr dependencies">
+      <option name="closed" value="true" />
+      <created>1715971857915</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1715971857915</updated>
+    </task>
+    <task id="LOCAL-00004" summary="create entities - AssignorEntity.cs, PayableEntity.cs and BaseEntity.cs">
+      <option name="closed" value="true" />
+      <created>1715971886868</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1715971886869</updated>
+    </task>
+    <task id="LOCAL-00005" summary="create ef mappings - AssignorMap.cs and PayableMap.cs">
+      <option name="closed" value="true" />
+      <created>1715971918667</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1715971918667</updated>
+    </task>
+    <task id="LOCAL-00006" summary="remove template classes">
+      <option name="closed" value="true" />
+      <created>1715971956167</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1715971956167</updated>
+    </task>
+    <task id="LOCAL-00007" summary="update workspace.xml">
+      <option name="closed" value="true" />
+      <created>1715971973240</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1715971973240</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -151,6 +199,11 @@
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="first commit" />
     <MESSAGE value="add workspace configuration" />
-    <option name="LAST_COMMIT_MESSAGE" value="add workspace configuration" />
+    <MESSAGE value="add entity framework and mediatr dependencies" />
+    <MESSAGE value="create entities - AssignorEntity.cs, PayableEntity.cs and BaseEntity.cs" />
+    <MESSAGE value="create ef mappings - AssignorMap.cs and PayableMap.cs" />
+    <MESSAGE value="remove template classes" />
+    <MESSAGE value="update workspace.xml" />
+    <option name="LAST_COMMIT_MESSAGE" value="update workspace.xml" />
   </component>
 </project>
