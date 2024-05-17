@@ -1,4 +1,4 @@
-using Application.Common.Interfaces;
+﻿using Application.Common.Interfaces;
 using Domain.Entities;
 using Infrastructure.Common;
 using Infrastructure.Interceptors;
@@ -7,15 +7,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Context;
 
-public class DataContext(
-    DbContextOptions<DataContext> options,
-    IMediator mediator,
-    AuditableEntitySaveChangesInterceptor auditableEntitySaveChangesInterceptor) : DbContext(options), IDataContext
+public class DataContext : DbContext, IDataContext
 {
-    private readonly IMediator _mediator = mediator;
+    private readonly IMediator? _mediator;
+    private readonly AuditableEntitySaveChangesInterceptor? _auditableEntitySaveChangesInterceptor;
 
-    private readonly AuditableEntitySaveChangesInterceptor _auditableEntitySaveChangesInterceptor =
-        auditableEntitySaveChangesInterceptor;
+    public DataContext()
+    {
+    }
+
+    public DataContext(DbContextOptions<DataContext> options, IMediator? mediator,
+        AuditableEntitySaveChangesInterceptor? auditableEntitySaveChangesInterceptor) : base(options)
+    {
+        _mediator = mediator;
+        _auditableEntitySaveChangesInterceptor = auditableEntitySaveChangesInterceptor;
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

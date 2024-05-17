@@ -2,14 +2,13 @@ using Application.Common.Interfaces;
 using Infrastructure.Context;
 using Infrastructure.Interceptors;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure;
 
 public static class ConfigureService
 {
-    public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    public static void AddInfrastructure(this IServiceCollection services)
     {
         services.AddTransient<IDataContext>(provider => provider.GetRequiredService<DataContext>());
         services.AddScoped<AuditableEntitySaveChangesInterceptor>();
