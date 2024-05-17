@@ -13,7 +13,7 @@ public static class ConfigureService
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddTransient<IDataContext>(provider => provider.GetRequiredService<DataContext>());
-        services.AddScoped<ISaveChangesInterceptor, AuditableEntitySaveChangesInterceptor>();
+        services.AddScoped<AuditableEntitySaveChangesInterceptor>();
 
         if (AppDomain.CurrentDomain.FriendlyName.Contains("testhost"))
         {
