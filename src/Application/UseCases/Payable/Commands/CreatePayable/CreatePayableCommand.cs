@@ -1,5 +1,6 @@
 using Application.Common.Interfaces;
 using Domain.Entities;
+using Domain.Events.Payable;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -36,6 +37,8 @@ public sealed class CreatePayableHandler(ILogger<CreatePayableHandler> logger, I
                 AssignorId = request.AssignorId,
                 Assignor = request.Assignor,
             };
+
+            payable.AddDomainEvent(new PayableCreatedEvent(payable));
 
             context.Payables.Add(payable);
             await context.SaveChangesAsync(cancellationToken);

@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Domain.Entities;
@@ -37,7 +38,7 @@ public sealed class GetAssignorByIdHandler(ILogger<GetAssignorByIdHandler> logge
 
             response.Assignor = assignor;
 
-            logger.LogInformation("Assignor found {@response}", response);
+            logger.LogInformation("Assignor found {@response}", JsonSerializer.Serialize(response));
         }
         catch (Exception ex)
         {

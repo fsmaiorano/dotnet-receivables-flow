@@ -6,12 +6,15 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "name": "Assignor 1",
-  "email": "test@test.com",
+  "name": "Assigndord s1",
+  "email": "tesssddsst@test.com",
   "phone": "1234567890",
   "document": "1234567890"
 }
 
-###
+### Get Assignor
+GET {{Api_HostAddress}}/integrations/assignor/430b8c29-4494-40c7-a90e-1d5a1022fa08
+Accept: application/json
+
 
 

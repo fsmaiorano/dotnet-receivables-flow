@@ -1,5 +1,6 @@
 using Application.Common.Interfaces;
 using Domain.Entities;
+using Domain.Events.Assignor;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -36,6 +37,8 @@ public sealed class CreateAssignorHandler(ILogger<CreateAssignorHandler> logger,
                 Phone = request.Phone,
                 Email = request.Email,
             };
+
+            assignor.AddDomainEvent(new AssignorCreatedEvent(assignor));
 
             context.Assignors.Add(assignor);
             await context.SaveChangesAsync(cancellationToken);

@@ -5,6 +5,7 @@ using Infrastructure;
 using MediatR;
 using System.Text.Json.Serialization;
 using Api.Handlers;
+using Application.UseCases.Assignor.Queries;
 using JsonOptions = Microsoft.AspNetCore.Http.Json.JsonOptions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -43,5 +44,16 @@ app.MapPost("/integrations/assignor",
         async (CreateAssignorCommand command, ISender sender) => await sender.Send(command))
     .WithName("CreateAssignor")
     .WithOpenApi();
+
+app.MapGet("/integrations/assignor/{assignorId}",
+        async (string assignorId, ISender sender) =>
+            await sender.Send(new GetAssignorByIdQuery { Id = Guid.Parse(assignorId) }))
+    .WithName("GetAssignorById")
+    .WithOpenApi();
+
+// app.MapPost("/integrations/assignor/{assignorId}/payment",
+//         async (CreatePaymentCommand command, ISender sender) => await sender.Send(command))
+//     .WithName("CreatePayment")
+//     .WithOpenApi();
 
 app.Run();
