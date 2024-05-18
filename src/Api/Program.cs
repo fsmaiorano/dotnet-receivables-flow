@@ -6,6 +6,8 @@ using MediatR;
 using System.Text.Json.Serialization;
 using Api.Handlers;
 using Application.UseCases.Assignor.Queries;
+using Application.UseCases.Payable.Commands.CreatePayable;
+using Application.UseCases.Payable.Queries;
 using JsonOptions = Microsoft.AspNetCore.Http.Json.JsonOptions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -51,9 +53,19 @@ app.MapGet("/integrations/assignor/{assignorId}",
     .WithName("GetAssignorById")
     .WithOpenApi();
 
-// app.MapPost("/integrations/assignor/{assignorId}/payment",
-//         async (CreatePaymentCommand command, ISender sender) => await sender.Send(command))
-//     .WithName("CreatePayment")
-//     .WithOpenApi();
+app.MapPost("/integrations/assignor/{assignorId}/payable",
+        async (CreatePayableCommand command, ISender sender, string assignorId) =>
+        {
+            command.AssignorId = Guid.Parse(assignorId);
+            return await sender.Send(command);
+        })
+    .WithName("CreatePayment")
+    .WithOpenApi();
+
+app.MapGet("/integrations/payable/{payableId}",
+        async (string payableId, ISender sender) =>
+            await sender.Send(new GetPayableByIdQuery() { Id = Guid.Parse(payableId) }))
+    .WithName("GetPayableById")
+    .WithOpenApi();
 
 app.Run();

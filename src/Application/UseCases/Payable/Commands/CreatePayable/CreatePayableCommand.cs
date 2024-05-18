@@ -10,7 +10,7 @@ public record CreatePayableCommand : IRequest<CreatePayableResponse>
 {
     public required float Value { get; init; }
     public required DateTime EmissionDate { get; init; }
-    public required Guid AssignorId { get; init; }
+    public required Guid AssignorId { get; set; }
     public required AssignorEntity Assignor { get; init; }
 }
 

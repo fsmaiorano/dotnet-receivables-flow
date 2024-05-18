@@ -16,5 +16,18 @@ Content-Type: application/json
 GET {{Api_HostAddress}}/integrations/assignor/430b8c29-4494-40c7-a90e-1d5a1022fa08
 Accept: application/json
 
+### Create Payable
+POST {{Api_HostAddress}}/integrations/payable/
+Accept: application/json
+Content-Type: application/json
 
+{
+  "description": "Teste",
+  "value": 100.00,
+  "dueDate": "2021-12-31",
+  "assignorId": "430b8c29-4494-40c7-a90e-1d5a1022fa08"
+}
 
+### Get Payable
+GET {{Api_HostAddress}}/integrations/payable/430b8c29-4494-40c7-a90e-1d5a1022fa08
+Accept: application/json
