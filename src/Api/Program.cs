@@ -9,8 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddApplication();
 builder.Services.AddInfrastructure();
+builder.Services.AddApplication();
 builder.Services.AddApi();
 
 builder.Services.AddCors();
@@ -30,12 +30,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var mediator = app.Services.GetService(typeof(ISender)) as ISender ??
-               throw new NullReferenceException("Mediator is null");
-
 //Routes
-
-app.MapPost("/integrations/assignor", async (CreateAssignorCommand command) => await mediator.Send(command))
+app.MapPost("/integrations/assignor",
+        async (CreateAssignorCommand command, ISender sender) => await sender.Send(command))
     .WithName("CreateAssignor")
     .WithOpenApi();
 
