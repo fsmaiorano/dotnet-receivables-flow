@@ -10,6 +10,7 @@ using Application.UseCases.Assignor.Commands.UpdateAssignor;
 using Application.UseCases.Assignor.Queries;
 using Application.UseCases.Payable.Commands.CreatePayable;
 using Application.UseCases.Payable.Queries;
+using Infrastructure.Extensions;
 using JsonOptions = Microsoft.AspNetCore.Http.Json.JsonOptions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -39,6 +40,8 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    app.ApplyMigrations();
 }
 
 app.UseHttpsRedirection();
