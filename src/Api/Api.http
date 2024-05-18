@@ -1,6 +1,17 @@
-@Api_HostAddress = http://localhost:5231
+@Api_HostAddress = https://localhost:7247
 
-GET {{Api_HostAddress}}/weatherforecast/
+### Create Assignor
+POST {{Api_HostAddress}}/integrations/assignor/
 Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "Assignor 1",
+  "email": "test@test.com",
+  "phone": "1234567890",
+  "document": "1234567890"
+}
 
 ###
+
+
