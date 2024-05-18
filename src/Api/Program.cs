@@ -10,7 +10,11 @@ using Application.UseCases.Assignor.Commands.UpdateAssignor;
 using Application.UseCases.Assignor.Queries;
 using Application.UseCases.Payable.Commands.CreatePayable;
 using Application.UseCases.Payable.Queries;
+using Identity;
+using Identity.Context;
+using Identity.Extensions;
 using Infrastructure.Extensions;
+using Microsoft.AspNetCore.Identity;
 using JsonOptions = Microsoft.AspNetCore.Http.Json.JsonOptions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +22,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme)
+    .AddCookie(IdentityConstants.ApplicationScheme)
+    .AddBearerToken(IdentityConstants.BearerScheme);
+
+builder.Services.AddIdentity();
 builder.Services.AddInfrastructure();
 builder.Services.AddApplication();
 builder.Services.AddApi();
@@ -31,6 +40,8 @@ builder.Services.AddCors();
 
 var app = builder.Build();
 
+app.MapIdentityApi<User>();
+
 app.UseCors(corsPolicyBuilder => corsPolicyBuilder
     .AllowAnyOrigin()
     .AllowAnyMethod()
@@ -42,6 +53,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 
     app.ApplyMigrations();
+    app.ApplyIdentityMigrations();
 }
 
 app.UseHttpsRedirection();
