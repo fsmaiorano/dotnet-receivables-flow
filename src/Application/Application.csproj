@@ -13,10 +13,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="UseCases\Payable\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Compile Remove="Common\Models\BaseModel\**" />
       <Compile Remove="Common\Models\**" />
     </ItemGroup>

@@ -3,6 +3,10 @@ using Application;
 using Application.UseCases.Assignor.Commands.CreateAssignor;
 using Infrastructure;
 using MediatR;
+using System.Text.Json.Serialization;
+using Api.Handlers;
+using Microsoft.AspNetCore.Mvc;
+using JsonOptions = Microsoft.AspNetCore.Http.Json.JsonOptions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +16,14 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddInfrastructure();
 builder.Services.AddApplication();
 builder.Services.AddApi();
+
+builder.Services.AddExceptionHandler<CustomExceptionHandler>();
+
+builder.Services.Configure<JsonOptions>(options =>
+    options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
+// builder.Services.Configure<ApiBehaviorOptions>(options =>
+//     options.SuppressModelStateInvalidFilter = true);
 
 builder.Services.AddCors();
 
@@ -27,6 +39,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+//add api filters
+app.UseHostFiltering();
+
 
 app.UseHttpsRedirection();
 

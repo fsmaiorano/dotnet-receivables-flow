@@ -18,7 +18,7 @@ public class CreateAssignorResponse
     public Guid Id { get; set; }
 }
 
-public class CreateAssignorHandler(ILogger<CreateAssignorHandler> logger, IDataContext context)
+public sealed class CreateAssignorHandler(ILogger<CreateAssignorHandler> logger, IDataContext context)
     : IRequestHandler<CreateAssignorCommand, CreateAssignorResponse>
 {
     public async Task<CreateAssignorResponse> Handle(CreateAssignorCommand request, CancellationToken cancellationToken)
