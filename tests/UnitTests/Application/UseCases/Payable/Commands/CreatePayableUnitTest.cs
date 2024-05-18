@@ -23,10 +23,7 @@ public class CreatePayableHandlerTests
         var handler = new CreatePayableHandler(loggerMock.Object, contextMock.Object);
         var command = new CreatePayableCommand
         {
-            Value = 100.0f, EmissionDate = DateTime.Now, AssignorId = Guid.NewGuid(), Assignor = new AssignorEntity
-            {
-                Name = "Test", Document = "123", Phone = "1234567890", Email = "test@test.com"
-            }
+            Value = 100.0f, EmissionDate = DateTime.Now, AssignorId = Guid.NewGuid()
         };
 
         // Act
@@ -51,10 +48,7 @@ public class CreatePayableHandlerTests
         var handler = new CreatePayableHandler(loggerMock.Object, contextMock.Object);
         var command = new CreatePayableCommand
         {
-            Value = 100.0f, EmissionDate = DateTime.Now, AssignorId = Guid.NewGuid(), Assignor = new AssignorEntity
-            {
-                Name = "Test", Document = "123", Phone = "1234567890", Email = "test@test.com"
-            }
+            Value = 100.0f, EmissionDate = DateTime.Now, AssignorId = Guid.NewGuid()
         };
 
         // Act & Assert

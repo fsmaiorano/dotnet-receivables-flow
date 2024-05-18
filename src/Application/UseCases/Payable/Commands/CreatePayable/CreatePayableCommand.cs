@@ -11,7 +11,6 @@ public record CreatePayableCommand : IRequest<CreatePayableResponse>
     public required float Value { get; init; }
     public required DateTime EmissionDate { get; init; }
     public required Guid AssignorId { get; set; }
-    public required AssignorEntity Assignor { get; init; }
 }
 
 public record CreatePayableResponse
@@ -35,7 +34,6 @@ public sealed class CreatePayableHandler(ILogger<CreatePayableHandler> logger, I
                 Value = request.Value,
                 EmissionDate = request.EmissionDate,
                 AssignorId = request.AssignorId,
-                Assignor = request.Assignor,
             };
 
             payable.AddDomainEvent(new PayableCreatedEvent(payable));

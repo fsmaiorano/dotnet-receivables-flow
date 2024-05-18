@@ -17,8 +17,5 @@ public class CreatePayableValidator : AbstractValidator<CreatePayableCommand>
 
         RuleFor(x => x.AssignorId)
             .NotEmpty().WithMessage("Assignor id is required.");
-
-        RuleFor(x => x.Assignor)
-            .NotEmpty().WithMessage("Assignor is required.");
     }
 }
