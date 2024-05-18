@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.UseCases.Payable.Commands.CreatePayable;
 
-public class CreatePayableCommand : IRequest<CreatePayableResponse>
+public record CreatePayableCommand : IRequest<CreatePayableResponse>
 {
     public required float Value { get; init; }
     public required DateTime EmissionDate { get; init; }
@@ -15,6 +15,7 @@ public class CreatePayableCommand : IRequest<CreatePayableResponse>
 
 public record CreatePayableResponse
 {
+    public Guid Id { get; set; }
 }
 
 public sealed class CreatePayableHandler(ILogger<CreatePayableHandler> logger, IDataContext context)
@@ -38,6 +39,8 @@ public sealed class CreatePayableHandler(ILogger<CreatePayableHandler> logger, I
 
             context.Payables.Add(payable);
             await context.SaveChangesAsync(cancellationToken);
+
+            response.Id = payable.Id;
 
             logger.LogInformation("Payable created with id {Id}", payable.Id);
         }
