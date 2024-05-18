@@ -4,9 +4,9 @@ namespace Domain.Common;
 
 public abstract class BaseEntity
 {
-    public required Guid Id { get; init; } = Guid.NewGuid();
-    public required DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    public required DateTime? UpdatedAt { get; set; }
+    public Guid Id { get; init; } = Guid.NewGuid();
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? UpdatedAt { get; set; }
 
     public List<INotification> DomainEvents { get; } = [];
 
