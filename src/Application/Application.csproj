@@ -18,14 +18,17 @@
 
     <ItemGroup>
       <Compile Remove="Common\Models\BaseModel\**" />
+      <Compile Remove="Common\Models\**" />
     </ItemGroup>
 
     <ItemGroup>
       <EmbeddedResource Remove="Common\Models\BaseModel\**" />
+      <EmbeddedResource Remove="Common\Models\**" />
     </ItemGroup>
 
     <ItemGroup>
       <None Remove="Common\Models\BaseModel\**" />
+      <None Remove="Common\Models\**" />
     </ItemGroup>
 
     <ItemGroup>
