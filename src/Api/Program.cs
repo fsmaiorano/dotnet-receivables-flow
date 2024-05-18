@@ -5,6 +5,8 @@ using Infrastructure;
 using MediatR;
 using System.Text.Json.Serialization;
 using Api.Handlers;
+using Application.UseCases.Assignor.Commands.DeleteAssignor;
+using Application.UseCases.Assignor.Commands.UpdateAssignor;
 using Application.UseCases.Assignor.Queries;
 using Application.UseCases.Payable.Commands.CreatePayable;
 using Application.UseCases.Payable.Queries;
@@ -41,7 +43,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-//Routes
+// Assignors
 app.MapPost("/integrations/assignor",
         async (CreateAssignorCommand command, ISender sender) => await sender.Send(command))
     .WithName("CreateAssignor")
@@ -53,6 +55,23 @@ app.MapGet("/integrations/assignor/{assignorId}",
     .WithName("GetAssignorById")
     .WithOpenApi();
 
+app.MapPut("/integrations/assignor/{assignorId}",
+        async (UpdateAssignorCommand command, ISender sender, string assignorId) =>
+        {
+            command.Id = Guid.Parse(assignorId);
+            return await sender.Send(command);
+        })
+    .WithName("UpdateAssignor")
+    .WithOpenApi();
+
+app.MapDelete("/integrations/assignor/{assignorId}",
+        async (string assignorId, ISender sender) =>
+            await sender.Send(new DeleteAssignorCommand { Id = Guid.Parse(assignorId) }))
+    .WithName("DeleteAssignor")
+    .WithOpenApi();
+
+
+// Payables
 app.MapPost("/integrations/assignor/{assignorId}/payable",
         async (CreatePayableCommand command, ISender sender, string assignorId) =>
         {

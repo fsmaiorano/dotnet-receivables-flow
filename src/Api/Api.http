@@ -6,14 +6,30 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "name": "Assigndord s1",
-  "email": "tesssddsst@test.com",
+  "name": "New Assignor 1",
+  "email": "newassignor1@test.com",
   "phone": "1234567890",
   "document": "1234567890"
 }
 
 ### Get Assignor
-GET {{Api_HostAddress}}/integrations/assignor/430b8c29-4494-40c7-a90e-1d5a1022fa08
+GET {{Api_HostAddress}}/integrations/assignor/d6361daa-8aab-49e1-8f74-19b6951c761c
+Accept: application/json
+
+### Update Assignor
+PUT {{Api_HostAddress}}/integrations/assignor/d6361daa-8aab-49e1-8f74-19b6951c761c
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "New Assignor 1 Updated",
+  "email": "newassignor1@test.com",
+  "phone": "1234567890",
+  "document": "1234567890"
+}
+
+### Delete Assignor
+DELETE {{Api_HostAddress}}/integrations/assignor/d6361daa-8aab-49e1-8f74-19b6951c761c
 Accept: application/json
 
 ### Create Payable
@@ -30,4 +46,20 @@ Content-Type: application/json
 
 ### Get Payable
 GET {{Api_HostAddress}}/integrations/payable/430b8c29-4494-40c7-a90e-1d5a1022fa08
+Accept: application/json
+
+### Update Payable
+PUT {{Api_HostAddress}}/integrations/payable/430b8c29-4494-40c7-a90e-1d5a1022fa08
+Accept: application/json
+Content-Type: application/json
+
+{
+  "description": "Teste Updated",
+  "value": 100.00,
+  "dueDate": "2021-12-31",
+  "assignorId": "430b8c29-4494-40c7-a90e-1d5a1022fa08"
+}
+
+### Delete Payable
+DELETE {{Api_HostAddress}}/integrations/payable/430b8c29-4494-40c7-a90e-1d5a1022fa08
 Accept: application/json
