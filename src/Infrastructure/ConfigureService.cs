@@ -10,7 +10,7 @@ public static class ConfigureService
 {
     public static void AddInfrastructure(this IServiceCollection services)
     {
-        services.AddTransient<IDataContext>(provider => provider.GetRequiredService<DataContext>());
+        services.AddScoped<IDataContext, DataContext>();
         services.AddScoped<AuditableEntitySaveChangesInterceptor>();
 
         if (AppDomain.CurrentDomain.FriendlyName.Contains("testhost"))
