@@ -8,7 +8,7 @@ namespace Application.UseCases.Assignor.Commands.UpdateAssignor;
 
 public record UpdateAssignorCommand : IRequest<UpdateAssignorResponse>
 {
-    public required Guid Id { get; init; }
+    public Guid? Id { get; set; }
     public string? Name { get; init; }
     public string? Document { get; init; }
     public string? Phone { get; init; }
@@ -35,7 +35,7 @@ public sealed class UpdateAssignorHandler(ILogger<UpdateAssignorHandler> logger,
 
             if (assignor is null)
             {
-                throw new NotFoundException(nameof(AssignorEntity), request.Id);
+                throw new NotFoundException(nameof(AssignorEntity), request.Id!);
             }
 
             assignor.Name = request.Name ?? assignor.Name;
