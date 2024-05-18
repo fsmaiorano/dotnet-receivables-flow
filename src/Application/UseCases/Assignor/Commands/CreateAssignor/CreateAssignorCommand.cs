@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.UseCases.Assignor.Commands.CreateAssignor;
 
-public class CreateAssignorCommand : IRequest<CreateAssignorResponse>
+public record CreateAssignorCommand : IRequest<CreateAssignorResponse>
 {
     public required string Name { get; init; }
     public required string Document { get; init; }
@@ -13,7 +13,7 @@ public class CreateAssignorCommand : IRequest<CreateAssignorResponse>
     public required string Email { get; init; }
 }
 
-public class CreateAssignorResponse
+public record CreateAssignorResponse
 {
     public Guid Id { get; set; }
 }
