@@ -7,10 +7,10 @@ namespace Application.UseCases.Assignor.Commands.CreateAssignor;
 
 public class CreateAssignorCommand : IRequest<CreateAssignorResponse>
 {
-    public required string Name { get; set; }
-    public required string Document { get; set; }
-    public required string Phone { get; set; }
-    public required string Email { get; set; }
+    public required string Name { get; init; }
+    public required string Document { get; init; }
+    public required string Phone { get; init; }
+    public required string Email { get; init; }
 }
 
 public class CreateAssignorResponse
