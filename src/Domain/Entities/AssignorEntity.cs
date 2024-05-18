@@ -5,8 +5,8 @@ namespace Domain.Entities;
 public class AssignorEntity : BaseEntity
 {
     public required string Name { get; init; }
-    public required string Document { get; set; }
-    public required string Phone { get; set; }
-    public required string Email { get; set; }
-    public virtual List<PayableEntity>? Payables { get; set; }
+    public required string Document { get; init; }
+    public required string Phone { get; init; }
+    public required string Email { get; init; }
+    public virtual ICollection<PayableEntity>? Payables { get; init; }
 }
