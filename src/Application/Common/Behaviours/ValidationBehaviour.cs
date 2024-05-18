@@ -12,27 +12,21 @@ public class ValidationBehaviour<TRequest, TResponse>(IEnumerable<IValidator<TRe
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
     {
-        if (_validators.Any())
-        {
-            var context = new ValidationContext<TRequest>(request);
+        if (!_validators.Any()) return await next();
+        var context = new ValidationContext<TRequest>(request);
 
-            var validationResults = await Task.WhenAll(
-                _validators.Select(v =>
-                    v.ValidateAsync(context, cancellationToken)));
+        var validationResults = await Task.WhenAll(
+            _validators.Select(v =>
+                v.ValidateAsync(context, cancellationToken)));
 
-            var failures = validationResults
-                .Where(r => r.Errors.Count != 0)
-                .SelectMany(r => r.Errors)
-                .ToList();
+        var failures = validationResults
+            .Where(r => r.Errors.Count != 0)
+            .SelectMany(r => r.Errors)
+            .ToList();
 
-            if (failures.Count != 0)
-            {
-                Console.WriteLine(
-                    $"Validation failed for {typeof(TRequest).Name} - {failures.Count} errors - {string.Join(", ", failures.Select(f => f.ErrorMessage))}");
-                throw new Exceptions.ValidationException(failures);
-            }
-        }
-
-        return await next();
+        if (failures.Count == 0) return await next();
+        Console.WriteLine(
+            $"Validation failed for {typeof(TRequest).Name} - {failures.Count} errors - {string.Join(", ", failures.Select(f => f.ErrorMessage))}");
+        throw new Exceptions.ValidationException(failures);
     }
 }
