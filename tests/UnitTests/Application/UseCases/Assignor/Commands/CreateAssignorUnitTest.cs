@@ -8,7 +8,7 @@ using Moq;
 namespace UnitTests.Application.UseCases.Assignor.Commands;
 
 [TestFixture]
-public class CreateAssignorHandlerTests
+public class CreateAssignorHandlerUnitTest
 {
     [Test]
     public async Task Handle_ValidRequest_CreatesAssignor()

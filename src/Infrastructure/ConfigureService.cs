@@ -1,5 +1,6 @@
 using Application.Common.Interfaces;
 using Infrastructure.Context;
+using Infrastructure.Database;
 using Infrastructure.Interceptors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,6 +26,8 @@ public static class ConfigureService
                 options.UseNpgsql(
                     "Host=localhost;Port=5432;Database=receivables-flow;Username=postgres;Password=postgres");
             });
+
+            _ = Seed.ExecuteAsync(services.BuildServiceProvider());
         }
     }
 }
