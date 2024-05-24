@@ -1,5 +1,8 @@
 @Api_HostAddress = https://localhost:7247
 
+### Authentication
+
+
 ### Create Assignor
 POST {{Api_HostAddress}}/integrations/assignor/
 Accept: application/json

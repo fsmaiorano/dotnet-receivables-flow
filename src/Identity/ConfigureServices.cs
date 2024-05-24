@@ -17,9 +17,5 @@ public static class ConfigureService
             options.UseNpgsql(
                 "Host=localhost;Port=5432;Database=receivables-flow-identity;Username=postgres;Password=postgres");
         });
-
-        services.AddIdentityCore<User>()
-            .AddEntityFrameworkStores<IdentityContext>()
-            .AddApiEndpoints();
     }
 }

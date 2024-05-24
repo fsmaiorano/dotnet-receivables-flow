@@ -31,4 +31,8 @@
       <Reference Include="Microsoft.AspNetCore.Identity" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Migrations\" />
+    </ItemGroup>
+
 </Project>

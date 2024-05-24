@@ -11,25 +11,29 @@ using Application.UseCases.Assignor.Queries;
 using Application.UseCases.Payable.Commands.CreatePayable;
 using Application.UseCases.Payable.Queries;
 using Identity;
-using Identity.Context;
 using Identity.Extensions;
 using Infrastructure.Extensions;
-using Microsoft.AspNetCore.Identity;
+using Infrastructure.Security.Jwt;
+using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
 using JsonOptions = Microsoft.AspNetCore.Http.Json.JsonOptions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme)
-    .AddCookie(IdentityConstants.ApplicationScheme)
-    .AddBearerToken(IdentityConstants.BearerScheme);
 
 builder.Services.AddIdentity();
 builder.Services.AddInfrastructure();
 builder.Services.AddApplication();
 builder.Services.AddApi();
+
+builder.Services.AddSwaggerGenJwt("v1",
+    new OpenApiInfo
+    {
+        Title = "API",
+        Description = "",
+        Version = "v1",
+    });
 
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 
@@ -38,9 +42,20 @@ builder.Services.Configure<JsonOptions>(options =>
 
 builder.Services.AddCors();
 
+var tokenConfigurations = new TokenConfigurations();
+new ConfigureFromConfigurationOptions<TokenConfigurations>(
+        builder.Configuration.GetSection("TokenConfigurations"))
+    .Configure(tokenConfigurations);
+
+builder.Services.AddJwtSecurity(tokenConfigurations);
+builder.Services.AddScoped<IdentityInitializer>();
+
 var app = builder.Build();
 
-app.MapIdentityApi<User>();
+using var scope = app.Services.CreateScope();
+scope.ServiceProvider.GetRequiredService<IdentityInitializer>().Initialize();
+
+// app.MapIdentityApi<ApplicationUser>();
 
 app.UseCors(corsPolicyBuilder => corsPolicyBuilder
     .AllowAnyOrigin()
