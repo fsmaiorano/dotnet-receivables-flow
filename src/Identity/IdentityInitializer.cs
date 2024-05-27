@@ -14,7 +14,6 @@ public class IdentityInitializer(
 
     public void Initialize()
     {
-        // if (!_context.Database.EnsureCreated()) return;
         var roles = Enum.GetValues<RoleEnum>().Select(role => role.ToString()).ToArray();
 
         foreach (var role in roles)
@@ -37,6 +36,14 @@ public class IdentityInitializer(
                 Email = "user01@receivablesflow.com",
                 EmailConfirmed = true
             }, "123456", RoleEnum.Admin.ToString());
+
+        CreateUser(
+            new ApplicationUser()
+            {
+                UserName = "aprovame",
+                Email = "aprovame@receivablesflow.com",
+                EmailConfirmed = true
+            }, "aprovame", RoleEnum.Admin.ToString());
     }
 
     private void CreateUser(
