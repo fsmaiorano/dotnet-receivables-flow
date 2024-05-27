@@ -1,4 +1,4 @@
-namespace Infrastructure.Security.Jwt;
+namespace Application.Common.Security.Jwt;
 
 public class Token
 {

@@ -1,7 +1,7 @@
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Infrastructure.Security.Jwt;
+namespace Application.Common.Security.Jwt;
 
 public class SigningConfigurations
 {

@@ -1,4 +1,5 @@
 using Domain.Enums;
+using Domain.IdentityEntities;
 using Identity.Context;
 using Microsoft.AspNetCore.Identity;
 
@@ -32,8 +33,8 @@ public class IdentityInitializer(
         CreateUser(
             new ApplicationUser()
             {
-                UserName = "usr01_apis",
-                Email = "usr01_apis@teste.com.br",
+                UserName = "user01",
+                Email = "user01@receivablesflow.com",
                 EmailConfirmed = true
             }, "123456", RoleEnum.Admin.ToString());
     }

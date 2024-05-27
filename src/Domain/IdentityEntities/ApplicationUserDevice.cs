@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Identity;
+namespace Domain.IdentityEntities;
 
 public class ApplicationUserDevice
 {

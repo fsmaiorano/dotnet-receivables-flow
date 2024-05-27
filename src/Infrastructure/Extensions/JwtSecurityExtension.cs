@@ -1,6 +1,8 @@
+using Application.Common.Security;
+using Application.Common.Security.Jwt;
+using Domain.IdentityEntities;
 using Identity;
 using Identity.Context;
-using Infrastructure.Security.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

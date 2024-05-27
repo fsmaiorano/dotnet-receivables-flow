@@ -5,6 +5,8 @@ using Infrastructure;
 using MediatR;
 using System.Text.Json.Serialization;
 using Api.Handlers;
+using Application.Common.Security.Jwt;
+using Application.UseCases.Account.Commands.AuthenticateAccount;
 using Application.UseCases.Assignor.Commands.DeleteAssignor;
 using Application.UseCases.Assignor.Commands.UpdateAssignor;
 using Application.UseCases.Assignor.Queries;
@@ -13,7 +15,7 @@ using Application.UseCases.Payable.Queries;
 using Identity;
 using Identity.Extensions;
 using Infrastructure.Extensions;
-using Infrastructure.Security.Jwt;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using JsonOptions = Microsoft.AspNetCore.Http.Json.JsonOptions;
@@ -52,10 +54,8 @@ builder.Services.AddScoped<IdentityInitializer>();
 
 var app = builder.Build();
 
-using var scope = app.Services.CreateScope();
-scope.ServiceProvider.GetRequiredService<IdentityInitializer>().Initialize();
-
-// app.MapIdentityApi<ApplicationUser>();
+// using var scope = app.Services.CreateScope();
+// scope.ServiceProvider.GetRequiredService<IdentityInitializer>().Initialize();
 
 app.UseCors(corsPolicyBuilder => corsPolicyBuilder
     .AllowAnyOrigin()
@@ -73,19 +73,24 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// Authentication
+app.MapPost("/integrations/auth", [AllowAnonymous] async (AuthenticateAccountCommand command, ISender sender) =>
+        await sender.Send(command))
+    .WithName("Login")
+    .WithOpenApi();
+
 // Assignors
 app.MapPost("/integrations/assignor",
-        async (CreateAssignorCommand command, ISender sender) => await sender.Send(command))
+        [Authorize("Bearer")] async (CreateAssignorCommand command, ISender sender) => await sender.Send(command))
     .WithName("CreateAssignor")
     .WithOpenApi();
 
-app.MapGet("/integrations/assignor/{assignorId}",
-        async (string assignorId, ISender sender) =>
-            await sender.Send(new GetAssignorByIdQuery { Id = Guid.Parse(assignorId) }))
+app.MapGet("/integrations/assignor/{assignorId}", [Authorize("Bearer")] async (string assignorId, ISender sender) =>
+        await sender.Send(new GetAssignorByIdQuery { Id = Guid.Parse(assignorId) }))
     .WithName("GetAssignorById")
     .WithOpenApi();
 
-app.MapPut("/integrations/assignor/{assignorId}",
+app.MapPut("/integrations/assignor/{assignorId}", [Authorize("Bearer")]
         async (UpdateAssignorCommand command, ISender sender, string assignorId) =>
         {
             command.Id = Guid.Parse(assignorId);
@@ -94,15 +99,13 @@ app.MapPut("/integrations/assignor/{assignorId}",
     .WithName("UpdateAssignor")
     .WithOpenApi();
 
-app.MapDelete("/integrations/assignor/{assignorId}",
-        async (string assignorId, ISender sender) =>
-            await sender.Send(new DeleteAssignorCommand { Id = Guid.Parse(assignorId) }))
+app.MapDelete("/integrations/assignor/{assignorId}", [Authorize("Bearer")] async (string assignorId, ISender sender) =>
+        await sender.Send(new DeleteAssignorCommand { Id = Guid.Parse(assignorId) }))
     .WithName("DeleteAssignor")
     .WithOpenApi();
 
-
 // Payables
-app.MapPost("/integrations/assignor/{assignorId}/payable",
+app.MapPost("/integrations/assignor/{assignorId}/payable", [Authorize("Bearer")]
         async (CreatePayableCommand command, ISender sender, string assignorId) =>
         {
             command.AssignorId = Guid.Parse(assignorId);
@@ -111,9 +114,8 @@ app.MapPost("/integrations/assignor/{assignorId}/payable",
     .WithName("CreatePayment")
     .WithOpenApi();
 
-app.MapGet("/integrations/payable/{payableId}",
-        async (string payableId, ISender sender) =>
-            await sender.Send(new GetPayableByIdQuery() { Id = Guid.Parse(payableId) }))
+app.MapGet("/integrations/payable/{payableId}", [Authorize("Bearer")] async (string payableId, ISender sender) =>
+        await sender.Send(new GetPayableByIdQuery() { Id = Guid.Parse(payableId) }))
     .WithName("GetPayableById")
     .WithOpenApi();
 
