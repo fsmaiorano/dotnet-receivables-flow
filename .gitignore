@@ -48,3 +48,5 @@ msbuild.err
 msbuild.wrn
 
 payables_batch.json
+
+venv/   
