@@ -21,21 +21,14 @@ public record AuthenticateAccountResponse
 }
 
 public sealed class
-    AuthenticateAccountHandler : IRequestHandler<AuthenticateAccountCommand, AuthenticateAccountResponse>
+    AuthenticateAccountHandler(
+        ILogger<AuthenticateAccountHandler> logger,
+        IDataContext context,
+        UserManager<ApplicationUser> userManager,
+        AccessManager accessManager)
+    : IRequestHandler<AuthenticateAccountCommand, AuthenticateAccountResponse>
 {
-    private readonly ILogger<AuthenticateAccountHandler> _logger;
-    private readonly IDataContext _context;
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly AccessManager _accessManager;
-
-    public AuthenticateAccountHandler(ILogger<AuthenticateAccountHandler> logger, IDataContext context,
-        UserManager<ApplicationUser> userManager, AccessManager accessManager)
-    {
-        _logger = logger;
-        _context = context;
-        _userManager = userManager;
-        _accessManager = accessManager;
-    }
+    private readonly IDataContext _context = context;
 
     public async Task<AuthenticateAccountResponse> Handle(AuthenticateAccountCommand request,
         CancellationToken cancellationToken)
@@ -44,15 +37,15 @@ public sealed class
 
         try
         {
-            _logger.LogInformation("Authenticating account {@request}", request);
+            logger.LogInformation("Authenticating account {@request}", request);
 
             if (request.Email is not null)
             {
-                var user = await _userManager.FindByEmailAsync(request.Email);
+                var user = await userManager.FindByEmailAsync(request.Email);
 
                 if (user is null)
                 {
-                    _logger.LogWarning("User not found");
+                    logger.LogWarning("User not found");
                     return response;
                 }
 
@@ -62,24 +55,25 @@ public sealed class
                     PasswordHash = request.Password!,
                 };
                 var result = request.Password is not null &&
-                             _accessManager.ValidateCredentials(account);
+                             accessManager.ValidateCredentials(account);
 
                 if (!result)
                 {
-                    _logger.LogWarning("Invalid password");
+                    logger.LogWarning("Invalid password");
                     return response;
                 }
 
-                var token = _accessManager.GenerateToken(user);
+                var token = accessManager.GenerateToken(user);
 
                 response.AccessToken = token.AccessToken;
                 response.Expiration = token.Expiration;
             }
-            _logger.LogInformation("Account authenticated");
+
+            logger.LogInformation("Account authenticated");
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error authenticating account");
+            logger.LogError(ex, "Error authenticating account");
             throw;
         }
 
