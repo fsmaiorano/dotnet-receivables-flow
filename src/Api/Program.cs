@@ -54,8 +54,8 @@ builder.Services.AddScoped<IdentityInitializer>();
 
 var app = builder.Build();
 
-// using var scope = app.Services.CreateScope();
-// scope.ServiceProvider.GetRequiredService<IdentityInitializer>().Initialize();
+using var scope = app.Services.CreateScope();
+scope.ServiceProvider.GetRequiredService<IdentityInitializer>().Initialize();
 
 app.UseCors(corsPolicyBuilder => corsPolicyBuilder
     .AllowAnyOrigin()
