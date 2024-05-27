@@ -11,6 +11,7 @@ using Application.UseCases.Assignor.Commands.DeleteAssignor;
 using Application.UseCases.Assignor.Commands.UpdateAssignor;
 using Application.UseCases.Assignor.Queries;
 using Application.UseCases.Payable.Commands.CreatePayable;
+using Application.UseCases.Payable.Commands.CreatePayableBatch;
 using Application.UseCases.Payable.Queries;
 using Identity;
 using Identity.Extensions;
@@ -78,6 +79,13 @@ app.MapPost("/integrations/auth", async (AuthenticateAccountCommand command, ISe
         await sender.Send(command))
     .WithName("Login")
     .AllowAnonymous()
+    .WithOpenApi();
+
+// Batch
+app.MapPost("/integrations/payable/batch", async (CreatePayableBatchCommand command, ISender sender) =>
+        await sender.Send(command))
+    .WithName("CreatePayableBatch")
+    .RequireAuthorization()
     .WithOpenApi();
 
 // Assignors
