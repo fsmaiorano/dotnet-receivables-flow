@@ -74,20 +74,23 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 // Authentication
-app.MapPost("/integrations/auth", [AllowAnonymous] async (AuthenticateAccountCommand command, ISender sender) =>
+app.MapPost("/integrations/auth", async (AuthenticateAccountCommand command, ISender sender) =>
         await sender.Send(command))
     .WithName("Login")
+    .AllowAnonymous()
     .WithOpenApi();
 
 // Assignors
 app.MapPost("/integrations/assignor",
-        [Authorize("Bearer")] async (CreateAssignorCommand command, ISender sender) => await sender.Send(command))
+        async (CreateAssignorCommand command, ISender sender) => await sender.Send(command))
     .WithName("CreateAssignor")
+    .RequireAuthorization()
     .WithOpenApi();
 
-app.MapGet("/integrations/assignor/{assignorId}", [Authorize("Bearer")] async (string assignorId, ISender sender) =>
+app.MapGet("/integrations/assignor/{assignorId}", async (string assignorId, ISender sender) =>
         await sender.Send(new GetAssignorByIdQuery { Id = Guid.Parse(assignorId) }))
     .WithName("GetAssignorById")
+    .RequireAuthorization()
     .WithOpenApi();
 
 app.MapPut("/integrations/assignor/{assignorId}", [Authorize("Bearer")]
@@ -97,11 +100,13 @@ app.MapPut("/integrations/assignor/{assignorId}", [Authorize("Bearer")]
             return await sender.Send(command);
         })
     .WithName("UpdateAssignor")
+    .RequireAuthorization()
     .WithOpenApi();
 
-app.MapDelete("/integrations/assignor/{assignorId}", [Authorize("Bearer")] async (string assignorId, ISender sender) =>
+app.MapDelete("/integrations/assignor/{assignorId}", async (string assignorId, ISender sender) =>
         await sender.Send(new DeleteAssignorCommand { Id = Guid.Parse(assignorId) }))
     .WithName("DeleteAssignor")
+    .RequireAuthorization()
     .WithOpenApi();
 
 // Payables
@@ -112,11 +117,13 @@ app.MapPost("/integrations/assignor/{assignorId}/payable", [Authorize("Bearer")]
             return await sender.Send(command);
         })
     .WithName("CreatePayment")
+    .RequireAuthorization()
     .WithOpenApi();
 
-app.MapGet("/integrations/payable/{payableId}", [Authorize("Bearer")] async (string payableId, ISender sender) =>
+app.MapGet("/integrations/payable/{payableId}", async (string payableId, ISender sender) =>
         await sender.Send(new GetPayableByIdQuery() { Id = Guid.Parse(payableId) }))
     .WithName("GetPayableById")
+    .RequireAuthorization()
     .WithOpenApi();
 
 app.Run();
