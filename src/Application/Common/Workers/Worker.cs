@@ -1,4 +1,7 @@
 using System.Text;
+using System.Text.Json;
+using Application.UseCases.Payable.Commands.CreatePayable;
+using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -12,15 +15,18 @@ public class Worker : BackgroundService
     private readonly ILogger<Worker> _logger;
     private readonly int _intervalMessageWorkerActive;
     private readonly ExecutionParameter _executionParameter;
+    private readonly ISender _sender;
 
     public Worker(ILogger<Worker> logger,
         IConfiguration configuration,
-        ExecutionParameter executionParameter)
+        ExecutionParameter executionParameter,
+        ISender sender)
     {
         logger.LogInformation(
             $"Queue = {executionParameter.Queue}");
 
         _logger = logger;
+        _sender = sender;
         _executionParameter = executionParameter;
         _intervalMessageWorkerActive = configuration.GetValue<int>("IntervalMessageWorkerActive");
     }
@@ -63,5 +69,13 @@ public class Worker : BackgroundService
         _logger.LogInformation(
             $"[New message | {DateTime.Now:yyyy-MM-dd HH:mm:ss}] " +
             Encoding.UTF8.GetString(e.Body.ToArray()));
+
+        var createPayableCommand = JsonSerializer.Deserialize<CreatePayableCommand>(
+            e.Body.ToArray(), new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+
+        _sender.Send(createPayableCommand);
     }
 }
