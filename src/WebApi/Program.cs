@@ -4,7 +4,6 @@ using Application.Common.Security.Jwt;
 using Infrastructure;
 using Identity;
 using Infrastructure.Extensions;
-using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
@@ -15,7 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddIdentity();
 builder.Services.AddInfrastructure();
-builder.Services.AddApplication();
+builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddWebApi();
 
 builder.Services.AddControllers();
