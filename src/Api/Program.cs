@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Api;
 using Application;
 using Application.UseCases.Assignor.Commands.CreateAssignor;
@@ -82,8 +83,19 @@ app.MapPost("/integrations/auth", async (AuthenticateAccountCommand command, ISe
     .WithOpenApi();
 
 // Batch
-app.MapPost("/integrations/payable/batch", async (CreatePayableBatchCommand command, ISender sender) =>
-        await sender.Send(command))
+app.MapPost("/integrations/payable/batch", async (IFormFile file, ISender sender) =>
+    {
+        if (file.Length > 0)
+        {
+            using var streamReader = new StreamReader(file.OpenReadStream());
+            var content = await streamReader.ReadToEndAsync();
+            var command = JsonSerializer.Deserialize<CreatePayableBatchCommand>(content);
+            if (command != null)
+            {
+                await sender.Send(command);
+            }
+        }
+    })
     .WithName("CreatePayableBatch")
     .RequireAuthorization()
     .WithOpenApi();
