@@ -41,7 +41,7 @@ public class IdentityInitializer(
             new ApplicationUser()
             {
                 UserName = "aprovame",
-                Email = "aprovame@receivablesflow.com",
+                Email = "aprovame@aprovame.com",
                 EmailConfirmed = true
             }, "aprovame", RoleEnum.Admin.ToString());
     }

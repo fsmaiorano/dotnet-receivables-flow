@@ -17,6 +17,7 @@ public static class ConfigureServices
             cfg.AddOpenBehavior(typeof(PerformanceBehaviour<,>));
             cfg.AddOpenBehavior(typeof(UnhandledExceptionBehaviour<,>));
             cfg.AddOpenBehavior(typeof(ValidationBehaviour<,>));
+            // cfg.AddOpenBehavior(typeof(AuthorizationBehaviour<,>));
         });
     }
 }

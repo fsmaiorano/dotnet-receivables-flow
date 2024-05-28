@@ -2,7 +2,7 @@ using Application.Common.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Api.Handlers;
+namespace WebApi.Handlers;
 
 public class CustomExceptionHandler : IExceptionHandler
 {

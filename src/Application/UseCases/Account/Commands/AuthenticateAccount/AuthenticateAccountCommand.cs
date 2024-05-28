@@ -54,6 +54,7 @@ public sealed class
                     Email = request.Email,
                     PasswordHash = request.Password!,
                 };
+                
                 var result = request.Password is not null &&
                              accessManager.ValidateCredentials(account);
 
