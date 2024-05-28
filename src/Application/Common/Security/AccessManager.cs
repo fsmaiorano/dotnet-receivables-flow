@@ -64,12 +64,8 @@ public class AccessManager(
 
         var token = handler.WriteToken(securityToken);
 
-        //Write in AspNetUserTokens table
-        var x = userManager.SetAuthenticationTokenAsync(user, "Bearer", "Token", token).Result;
-
-        //write in AspNetUserLogins table
-        var y = userManager.AddLoginAsync(user, new UserLoginInfo("Bearer", token, "Bearer")).Result;
-
+        userManager.SetAuthenticationTokenAsync(user, "Bearer", "Token", token);
+        userManager.AddLoginAsync(user, new UserLoginInfo("Bearer", token, "Bearer"));
 
         return new Token
         {
