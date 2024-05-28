@@ -1,0 +1,82 @@
+@WebApi_HostAddress = http://localhost:5161
+@authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6WyIyYmUwOTBkMS1hMjZhLTQ2NjgtOTQ3NS1jMjkyMDExMzJjMmQiLCIyYmUwOTBkMS1hMjZhLTQ2NjgtOTQ3NS1jMjkyMDExMzJjMmQiXSwianRpIjoiMGIxYjdjNWRlMDU4NDM0NzkwMWFjOTZlMzFhODZmMzUiLCJuYmYiOjE3MTY5MTE5MjAsImV4cCI6MTcxNjkyMTkxOSwiaWF0IjoxNzE2OTExOTIwLCJpc3MiOiJFeGVtcGxvSXNzdWVyIiwiYXVkIjoiRXhlbXBsb0F1ZGllbmNlIn0.8_tMHkiGbcLjKsAUvfjeQdIbgRUZf44eY8yyr5sOwcg
+
+### Authentication
+POST {{WebApi_HostAddress}}/integrations/account/
+Content-Type: application/json
+
+{
+  "email": "user01@receivablesflow.com",
+  "password": "123456"
+}
+
+### Create Assignor
+POST {{WebApi_HostAddress}}/integrations/assignor/
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "New Assignor 1",
+  "email": "newassignor1@test.com",
+  "phone": "1234567890",
+  "document": "1234567890"
+}
+
+### Get Assignor
+GET {{WebApi_HostAddress}}/integrations/assignor/{assignorId}
+Authorization: Bearer {{authToken}}
+
+### Update Assignor
+PUT {{WebApi_HostAddress}}/integrations/assignor/{assignorId}
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "New Assignor 1 Updated",
+  "email": "newassignor1@test.com",
+  "phone": "1234567890",
+  "document": "1234567890"
+}
+
+### Delete Assignor
+DELETE {{WebApi_HostAddress}}/integrations/assignor/{assignorId}
+Authorization: Bearer {{authToken}}
+
+### Create Payable
+POST {{WebApi_HostAddress}}/integrations/payable/
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "description": "Teste",
+  "value": 100.00,
+  "dueDate": "2021-12-31",
+  "assignorId": "{assignorId}"
+}
+
+### Get Payable
+GET {{WebApi_HostAddress}}/integrations/payable/{payableId}
+Authorization: Bearer {{authToken}}
+
+### Update Payable
+PUT {{WebApi_HostAddress}}/integrations/payable/{payableId}
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "description": "Teste Updated",
+  "value": 100.00,
+  "dueDate": "2021-12-31",
+  "assignorId": "{assignorId}"
+}
+
+### Delete Payable
+DELETE {{WebApi_HostAddress}}/integrations/payable/{payableId}
+Authorization: Bearer {{authToken}}
+
+### Create Payable Batch
+POST {{WebApi_HostAddress}}/integrations/payable/batch
+Content-Type: multipart/form-data
+Authorization: Bearer {{authToken}}
+Content-Disposition: form-data; name="file"; filename="batch.json"
+
