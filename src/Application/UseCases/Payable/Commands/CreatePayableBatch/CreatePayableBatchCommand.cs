@@ -9,12 +9,11 @@ namespace Application.UseCases.Payable.Commands.CreatePayableBatch;
 
 public record CreatePayableBatchCommand : IRequest<CreatePayableBatchCommandResponse>
 {
-    public List<CreatePayableCommand> Payables { get; init; }
+    public List<CreatePayableCommand> Payables { get; } = [];
 }
 
 public record CreatePayableBatchCommandResponse
 {
-    public List<Guid> Ids { get; set; }
 }
 
 public sealed class
@@ -30,24 +29,29 @@ public sealed class
         {
             logger.LogInformation("Creating payable batch {@request}", request);
 
-            var payables = request.Payables.Select(p => new PayableEntity
-            {
-                Value = p.Value,
-                EmissionDate = p.EmissionDate,
-                AssignorId = p.AssignorId,
-            }).ToList();
+            const int batchSize = 10000;
+            var batchCount = (int)Math.Ceiling((double)request.Payables.Count / batchSize);
 
-            foreach (var payable in payables)
+            for (var i = 0; i < batchCount; i++)
             {
-                payable.AddDomainEvent(new PayableCreatedEvent(payable));
-                context.Payables.Add(payable);
+                var batch = request.Payables.Skip(i * batchSize).Take(batchSize).ToList();
+                var payables = batch.Select(p => new PayableEntity
+                {
+                    Value = p.Value,
+                    EmissionDate = p.EmissionDate.ToUniversalTime(),
+                    AssignorId = p.AssignorId,
+                }).ToList();
+
+                foreach (var payable in payables)
+                {
+                    payable.AddDomainEvent(new PayableCreatedEvent(payable));
+                    context.Payables.Add(payable);
+                }
+
+                await context.SaveChangesAsync(cancellationToken);
             }
 
-            await context.SaveChangesAsync(cancellationToken);
-
-            response.Ids = payables.Select(p => p.Id).ToList();
-
-            logger.LogInformation("Payable batch created with ids {Ids}", string.Join(", ", response.Ids));
+            logger.LogInformation("Payable batch created");
         }
         catch (Exception ex)
         {
