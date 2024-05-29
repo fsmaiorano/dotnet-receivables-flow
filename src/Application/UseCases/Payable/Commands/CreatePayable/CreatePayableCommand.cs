@@ -6,6 +6,8 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.UseCases.Payable.Commands.CreatePayable;
 
+using Microsoft.Extensions.DependencyInjection;
+
 public record CreatePayableCommand : IRequest<CreatePayableResponse>
 {
     public required float Value { get; init; }
@@ -18,7 +20,7 @@ public record CreatePayableResponse
     public Guid Id { get; set; }
 }
 
-public sealed class CreatePayableHandler(ILogger<CreatePayableHandler> logger, IDataContext context)
+public sealed class CreatePayableHandler(ILogger<CreatePayableHandler> logger, IServiceProvider services)
     : IRequestHandler<CreatePayableCommand, CreatePayableResponse>
 {
     public async Task<CreatePayableResponse> Handle(CreatePayableCommand request, CancellationToken cancellationToken)
@@ -29,15 +31,15 @@ public sealed class CreatePayableHandler(ILogger<CreatePayableHandler> logger, I
         {
             logger.LogInformation("Creating payable {@request}", request);
 
+            using var scope = services.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<IDataContext>();
+
             var payable = new PayableEntity
             {
-                Value = request.Value,
-                EmissionDate = request.EmissionDate,
-                AssignorId = request.AssignorId,
+                Value = request.Value, EmissionDate = request.EmissionDate, AssignorId = request.AssignorId,
             };
 
             payable.AddDomainEvent(new PayableCreatedEvent(payable));
-
             context.Payables.Add(payable);
             await context.SaveChangesAsync(cancellationToken);
 

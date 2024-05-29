@@ -81,9 +81,6 @@ public class Worker : BackgroundService
         }
 
         using var scope = Services.CreateScope();
-        // services.AddScoped<IPipelineBehavior<CreatePayableCommand, CreatePayableResponse>, YourPipelineBehaviorImplementation>();
-        // services.AddTransient<IValidator<CreatePayableCommand>, YourValidatorImplementation>();
-
         var _sender = (ISender)scope.ServiceProvider.GetRequiredService(typeof(ISender));
         _ = _sender.Send(createPayableCommand);
     }
