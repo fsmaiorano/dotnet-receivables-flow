@@ -37,15 +37,16 @@ public class PayableController(ILogger<PayableController> logger, ISender mediat
     }
 
     [HttpDelete(Name = "DeletePayable")]
-    public async Task<DeletePayableResponse> DeletePayable([FromQuery] Guid payableId)
-    {
-        return await mediator.Send(new DeletePayableCommand { Id = payableId });
-    }
+    public async Task<DeletePayableResponse> DeletePayable([FromQuery] Guid payableId) =>
+        await mediator.Send(new DeletePayableCommand { Id = payableId });
 
     [HttpPost("Batch", Name = "CreatePayableBatch")]
     public async Task<IActionResult> CreatePayableBatch(IFormFile file)
     {
-        if (file.Length <= 0) return BadRequest();
+        if (file.Length <= 0)
+        {
+            return BadRequest();
+        }
 
         using var streamReader = new StreamReader(file.OpenReadStream());
         var content = await streamReader.ReadToEndAsync();
@@ -53,7 +54,10 @@ public class PayableController(ILogger<PayableController> logger, ISender mediat
 
         var command = new CreatePayableBatchCommand();
 
-        if (createPayableCommands == null) return BadRequest();
+        if (createPayableCommands == null)
+        {
+            return BadRequest();
+        }
 
         command.Payables.AddRange(createPayableCommands);
 

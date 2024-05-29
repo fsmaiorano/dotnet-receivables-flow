@@ -27,5 +27,7 @@ public static class ConfigureService
                     "Host=localhost;Port=5432;Database=receivables-flow;Username=postgres;Password=postgres");
             });
         }
+
+        services.AddScoped<Seed>();
     }
 }

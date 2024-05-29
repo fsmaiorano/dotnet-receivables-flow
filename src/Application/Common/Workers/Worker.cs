@@ -10,36 +10,38 @@ using RabbitMQ.Client.Events;
 
 namespace Application.Common.Workers;
 
+using Interfaces;
+using Microsoft.Extensions.DependencyInjection;
+
 public class Worker : BackgroundService
 {
     private readonly ILogger<Worker> _logger;
     private readonly int _intervalMessageWorkerActive;
     private readonly ExecutionParameter _executionParameter;
-    private readonly ISender _sender;
 
     public Worker(ILogger<Worker> logger,
+        IServiceProvider services,
         IConfiguration configuration,
-        ExecutionParameter executionParameter,
-        ISender sender)
+        ExecutionParameter executionParameter
+    )
     {
         logger.LogInformation(
             $"Queue = {executionParameter.Queue}");
 
         _logger = logger;
-        _sender = sender;
         _executionParameter = executionParameter;
         _intervalMessageWorkerActive = configuration.GetValue<int>("IntervalMessageWorkerActive");
+        Services = services;
     }
+
+    private IServiceProvider Services { get; }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         _logger.LogInformation(
             "Waiting message...");
 
-        var factory = new ConnectionFactory()
-        {
-            Uri = new Uri(_executionParameter.ConnectionString)
-        };
+        var factory = new ConnectionFactory() { Uri = new Uri(_executionParameter.ConnectionString) };
         using var connection = factory.CreateConnection();
         using var channel = connection.CreateModel();
 
@@ -71,11 +73,18 @@ public class Worker : BackgroundService
             Encoding.UTF8.GetString(e.Body.ToArray()));
 
         var createPayableCommand = JsonSerializer.Deserialize<CreatePayableCommand>(
-            e.Body.ToArray(), new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            });
+            e.Body.ToArray(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-        _sender.Send(createPayableCommand);
+        if (createPayableCommand is null)
+        {
+            return;
+        }
+
+        using var scope = Services.CreateScope();
+        // services.AddScoped<IPipelineBehavior<CreatePayableCommand, CreatePayableResponse>, YourPipelineBehaviorImplementation>();
+        // services.AddTransient<IValidator<CreatePayableCommand>, YourValidatorImplementation>();
+
+        var _sender = (ISender)scope.ServiceProvider.GetRequiredService(typeof(ISender));
+        _ = _sender.Send(createPayableCommand);
     }
 }

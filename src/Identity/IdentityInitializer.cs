@@ -22,6 +22,7 @@ public class IdentityInitializer(
             {
                 Name = role
             };
+
             if (roleManager.RoleExistsAsync(role).Result) continue;
             var result = roleManager.CreateAsync(appRole).Result;
 

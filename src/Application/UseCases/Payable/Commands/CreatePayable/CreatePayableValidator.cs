@@ -11,9 +11,9 @@ public class CreatePayableValidator : AbstractValidator<CreatePayableCommand>
             .GreaterThan(0).WithMessage("Value must be greater than 0.");
 
         RuleFor(x => x.EmissionDate)
-            .NotEmpty().WithMessage("Emission date is required.")
-            .LessThanOrEqualTo(DateTime.UtcNow)
-            .WithMessage("Emission date must be less than or equal to the current date.");
+            .NotEmpty().WithMessage("Emission date is required.");
+            // .LessThanOrEqualTo(DateTime.UtcNow)
+            // .WithMessage("Emission date must be less than or equal to the current date.");
 
         RuleFor(x => x.AssignorId)
             .NotEmpty().WithMessage("Assignor id is required.");

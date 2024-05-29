@@ -1,14 +1,44 @@
 import json
 import uuid
+import psycopg2
 from datetime import datetime, timedelta
+
+conn = psycopg2.connect(
+    dbname="receivables-flow",
+    user="postgres",
+    password="postgres",
+    host="localhost",
+    port="5432"
+)
+
+if conn.closed:
+    print("Connection is closed.")
+else:
+    print("Connection is open.")
+
+cur = conn.cursor()
+
+if cur is None:
+    print("Cursor creation failed.")
+else:
+    print("Cursor created successfully.")
+
+cur.execute('SELECT "Id" FROM "Assignors" LIMIT 1;')
+
+assignorid = cur.fetchone()
+
+cur.close()
+conn.close()
+
+print(assignorid)
 
 data = []
 for i in range(10000):
     data.append({
         "Value": 100.0 + i,
         "EmissionDate": (datetime.now() + timedelta(days=i)).isoformat(),
-        "AssignorId": str(uuid.uuid4())
+        "AssignorId": assignorid[0],
     })
 
-with open('payables_batch.json', 'w') as f:
+with open('docs/payables_batch.json', 'w') as f:
     json.dump(data, f)

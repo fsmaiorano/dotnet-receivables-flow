@@ -6,9 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure.Database;
 
-public abstract class Seed
+public class Seed
 {
-    public static async Task ExecuteAsync(IServiceProvider serviceProvider)
+    public void ExecuteAsync(IServiceProvider serviceProvider)
     {
         using var scope = serviceProvider.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<DataContext>();
@@ -20,12 +20,28 @@ public abstract class Seed
             {
                 Name = "Admin",
                 Email = "admin@receivablesflow.com",
-                PasswordHash = await aesOperation.EncryptAsync("123456", "mysecretkey"),
+                PasswordHash = aesOperation.EncryptAsync("123456", "mysecretkey").Result,
                 Role = RoleEnum.Admin
             };
 
             context.Accounts.Add(account);
-            await context.SaveChangesAsync();
+            context.SaveChanges();
         }
+
+        if (context.Assignors.FirstOrDefault(a => a.Email == "assignor1@receivablesflow.com") is not null)
+        {
+            return;
+        }
+
+        var assignor = new AssignorEntity
+        {
+            Name = "Assignor 1",
+            Document = "12345678901234",
+            Email = "assignor1@receivablesflow.com",
+            Phone = "11999999999"
+        };
+
+        context.Assignors.Add(assignor);
+        context.SaveChanges();
     }
 }
