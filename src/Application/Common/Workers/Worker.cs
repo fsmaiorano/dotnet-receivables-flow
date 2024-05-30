@@ -7,17 +7,15 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.Common.Workers;
 
-using Interfaces;
-using Microsoft.Extensions.DependencyInjection;
-
 public class Worker : BackgroundService
 {
-    private readonly ILogger<Worker> _logger;
-    private readonly int _intervalMessageWorkerActive;
-    private readonly ExecutionParameter _executionParameter;
+    private readonly ILogger<Worker> logger;
+    private readonly int intervalMessageWorkerActive;
+    private readonly ExecutionParameter executionParameter;
 
     public Worker(ILogger<Worker> logger,
         IServiceProvider services,
@@ -28,9 +26,9 @@ public class Worker : BackgroundService
         logger.LogInformation(
             $"Queue = {executionParameter.Queue}");
 
-        _logger = logger;
-        _executionParameter = executionParameter;
-        _intervalMessageWorkerActive = configuration.GetValue<int>("IntervalMessageWorkerActive");
+        this.logger = logger;
+        this.executionParameter = executionParameter;
+        intervalMessageWorkerActive = configuration.GetValue<int>("IntervalMessageWorkerActive");
         Services = services;
     }
 
@@ -38,37 +36,40 @@ public class Worker : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _logger.LogInformation(
+        logger.LogInformation(
             "Waiting message...");
 
-        var factory = new ConnectionFactory() { Uri = new Uri(_executionParameter.ConnectionString) };
-        using var connection = factory.CreateConnection();
-        using var channel = connection.CreateModel();
+        if (executionParameter.ConnectionString != null)
+        {
+            var factory = new ConnectionFactory() { Uri = new Uri(executionParameter.ConnectionString) };
+            using var connection = factory.CreateConnection();
+            using var channel = connection.CreateModel();
 
-        channel.QueueDeclare(queue: _executionParameter.Queue,
-            durable: false,
-            exclusive: false,
-            autoDelete: false,
-            arguments: null);
+            channel.QueueDeclare(queue: executionParameter.Queue,
+                durable: false,
+                exclusive: false,
+                autoDelete: false,
+                arguments: null);
 
-        var consumer = new EventingBasicConsumer(channel);
-        consumer.Received += Consumer_Received;
-        channel.BasicConsume(queue: _executionParameter.Queue,
-            autoAck: true,
-            consumer: consumer);
+            var consumer = new EventingBasicConsumer(channel);
+            consumer.Received += Consumer_Received;
+            channel.BasicConsume(queue: executionParameter.Queue,
+                autoAck: true,
+                consumer: consumer);
+        }
 
         while (!stoppingToken.IsCancellationRequested)
         {
-            _logger.LogInformation(
+            logger.LogInformation(
                 $"Worker active in: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
-            await Task.Delay(_intervalMessageWorkerActive, stoppingToken);
+            await Task.Delay(intervalMessageWorkerActive, stoppingToken);
         }
     }
 
     private void Consumer_Received(
         object? sender, BasicDeliverEventArgs e)
     {
-        _logger.LogInformation(
+        logger.LogInformation(
             $"[New message | {DateTime.Now:yyyy-MM-dd HH:mm:ss}] " +
             Encoding.UTF8.GetString(e.Body.ToArray()));
 
