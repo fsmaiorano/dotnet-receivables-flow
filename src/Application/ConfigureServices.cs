@@ -23,13 +23,6 @@ public static class ConfigureServices
             // cfg.AddOpenBehavior(typeof(AuthorizationBehaviour<,>));
         });
 
-        services.AddSingleton(
-            new ExecutionParameter()
-            {
-                ConnectionString = configuration["RabbitMqConnectionString"],
-                Queue = configuration["RabbitMqQueueName"],
-            });
-
         services.AddSingleton<RConsumer>();
         services.AddHostedService<Worker>();
     }
