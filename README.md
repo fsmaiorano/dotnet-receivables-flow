@@ -132,7 +132,7 @@ Crie um consumidor para esta fila que deverá pegar pagável por pagável, criar
 
 Caso não seja possível processar algum ítem do lote, coloque-o novamente na fila. Isso deve ocorrer por até 4 vezes. Depois, esse ítem deve ir para uma "Fila Morta" e um e-mail deve ser disparado para o time de operações.
 
-### Nível 9 - Cloud
+**### Nível 9 - Cloud**
 
 Crie uma pipeline de deploy da aplicação em alguma estrutura de Cloud. (AWS, Google, Azure...)
 

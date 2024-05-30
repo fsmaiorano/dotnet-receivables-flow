@@ -11,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.Common.Workers;
 
+using Queue;
+
 public class Worker : BackgroundService
 {
     private readonly ILogger<Worker> logger;
@@ -73,10 +75,10 @@ public class Worker : BackgroundService
             $"[New message | {DateTime.Now:yyyy-MM-dd HH:mm:ss}] " +
             Encoding.UTF8.GetString(e.Body.ToArray()));
 
-        var createPayableCommand = JsonSerializer.Deserialize<CreatePayableCommand>(
+        var createPayableCommand = JsonSerializer.Deserialize<PayableBatchQueueModel>(
             e.Body.ToArray(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-        if (createPayableCommand is null)
+        if (createPayableCommand == null)
         {
             return;
         }

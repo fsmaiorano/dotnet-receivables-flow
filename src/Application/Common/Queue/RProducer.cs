@@ -27,10 +27,10 @@ public class RProducer
         _channel.QueueDeclare(queue: _queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
     }
 
-    public void PublishMessage(string message)
+    public void PublishMessage(string exchange, string message)
     {
         var body = Encoding.UTF8.GetBytes(message);
-        _channel.BasicPublish(exchange: "", routingKey: _queueName, basicProperties: null, body: body);
+        _channel.BasicPublish(exchange: exchange, routingKey: _queueName, basicProperties: null, body: body);
     }
 
     public void Close()

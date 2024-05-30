@@ -36,39 +36,18 @@ public sealed class
         {
             logger.LogInformation("Creating payable batch {@request}", request);
 
-            var rproducer = new RProducer(configuration);
+            const int batchSize = 10000;
+            var batchCount = (int)Math.Ceiling((double)request.Payables.Count / batchSize);
 
-            foreach (var payableEntity in request.Payables.Select(payable => new PayableEntity
-                     {
-                         Value = payable.Value,
-                         EmissionDate = payable.EmissionDate.ToUniversalTime(),
-                         AssignorId = payable.AssignorId,
-                     }))
+            for (var i = 0; i < batchCount; i++)
             {
-                rproducer.PublishMessage(JsonSerializer.Serialize(payableEntity));
-            }
+                var batch = request.Payables.Skip(i * batchSize).Take(batchSize).ToList();
+                var rproducer = new RProducer(configuration);
+                var payableBatchQueryModel = new PayableBatchQueueModel { Id = Guid.NewGuid(), Payables = batch };
+                rproducer.PublishMessage("",JsonSerializer.Serialize(payableBatchQueryModel));
 
-            // const int batchSize = 10000;
-            // var batchCount = (int)Math.Ceiling((double)request.Payables.Count / batchSize);
-            //
-            // for (var i = 0; i < batchCount; i++)
-            // {
-            //     var batch = request.Payables.Skip(i * batchSize).Take(batchSize).ToList();
-            //     var payables = batch.Select(p => new PayableEntity
-            //     {
-            //         Value = p.Value,
-            //         EmissionDate = p.EmissionDate.ToUniversalTime(),
-            //         AssignorId = p.AssignorId,
-            //     }).ToList();
-            //
-            //     foreach (var payable in payables)
-            //     {
-            //         payable.AddDomainEvent(new PayableCreatedEvent(payable));
-            //         context.Payables.Add(payable);
-            //     }
-            //
-            //     await context.SaveChangesAsync(cancellationToken);
-            // }
+                rproducer.Close();
+            }
 
             logger.LogInformation("Payable batch created");
         }
