@@ -1,12 +1,8 @@
-using System.Text;
 using System.Text.Json;
-using Application.UseCases.Payable.Commands.CreatePayable;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.Common.Workers;

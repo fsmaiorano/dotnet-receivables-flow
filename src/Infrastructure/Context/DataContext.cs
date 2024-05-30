@@ -31,6 +31,7 @@ public class DataContext : DbContext, IDataContext
     public DbSet<AssignorEntity> Assignors => Set<AssignorEntity>();
     public DbSet<PayableEntity> Payables => Set<PayableEntity>();
     public DbSet<AccountEntity> Accounts => Set<AccountEntity>();
+    public DbSet<PayablesQueueEntity> PayablesQueue => Set<PayablesQueueEntity>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
