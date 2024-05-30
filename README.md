@@ -181,3 +181,8 @@ Caso o token expire, redirecione o usuário para a página de login.
 ### Nível 5 - Testes
 
 Crie testes para sua aplicação Front-end.
+
+
+python.exe -m pip install --upgrade pip
+
+

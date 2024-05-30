@@ -4,6 +4,7 @@ using Application.Common.Security.Jwt;
 using Application.Common.Workers;
 using Infrastructure;
 using Identity;
+using Identity.Extensions;
 using Infrastructure.Database;
 using Infrastructure.Extensions;
 using Microsoft.AspNetCore.Http.Json;
@@ -46,6 +47,9 @@ builder.Services.AddAntiforgery(options => { options.SuppressXFrameOptionsHeader
 
 var app = builder.Build();
 
+app.ApplyMigrations();
+app.ApplyIdentityMigrations();
+
 app.UseCors(corsPolicyBuilder => corsPolicyBuilder
     .AllowAnyOrigin()
     .AllowAnyMethod()
@@ -54,7 +58,6 @@ app.UseCors(corsPolicyBuilder => corsPolicyBuilder
 using var scope = app.Services.CreateScope();
 scope.ServiceProvider.GetRequiredService<IdentityInitializer>().Initialize();
 scope.ServiceProvider.GetRequiredService<Seed>().ExecuteAsync(scope.ServiceProvider);
-
 
 if (app.Environment.IsDevelopment())
 {
