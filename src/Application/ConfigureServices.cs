@@ -7,6 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Application;
 
+using Common.Queue;
+
 public static class ConfigureServices
 {
     public static void AddApplication(this IServiceCollection services, IConfiguration configuration)
@@ -28,6 +30,7 @@ public static class ConfigureServices
                 Queue = configuration["RabbitMqQueueName"],
             });
 
+        services.AddSingleton<RConsumer>();
         services.AddHostedService<Worker>();
     }
 }

@@ -13,8 +13,13 @@ public class RConsumer
     private readonly string _queueName;
     private readonly IConfiguration _configuration;
 
+    public delegate void MessageReceivedHandler(string message);
+
+    public event MessageReceivedHandler? OnMessageReceived;
+
     public RConsumer(IConfiguration configuration)
     {
+        _configuration = configuration;
         _factory = new ConnectionFactory
         {
             HostName = _configuration["RabbitMqHostName"]!,
@@ -35,7 +40,11 @@ public class RConsumer
             var body = ea.Body.ToArray();
             var message = Encoding.UTF8.GetString(body);
             Console.WriteLine($"Received message: {message}");
+
+            Console.WriteLine("Triggering OnMessageReceived event...");
+            OnMessageReceived?.Invoke(message);
         };
+
         _channel.BasicConsume(queue: _queueName, autoAck: true, consumer: consumer);
     }
 

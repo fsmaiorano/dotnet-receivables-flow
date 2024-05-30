@@ -1,6 +1,5 @@
 using System.Text.Json;
 using Application.UseCases.Payable.Commands.CreatePayable;
-using Application.UseCases.Payable.Commands.CreatePayableBatch;
 using Application.UseCases.Payable.Commands.DeletePayable;
 using Application.UseCases.Payable.Commands.UpdatePayable;
 using Application.UseCases.Payable.Queries;
@@ -8,6 +7,8 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers;
+
+using Application.UseCases.Payable.Commands.CreatePayableReceiveBatch;
 
 [ApiController]
 // [Authorize]
@@ -40,8 +41,8 @@ public class PayableController(ILogger<PayableController> logger, ISender mediat
     public async Task<DeletePayableResponse> DeletePayable([FromQuery] Guid payableId) =>
         await mediator.Send(new DeletePayableCommand { Id = payableId });
 
-    [HttpPost("Batch", Name = "CreatePayableBatch")]
-    public async Task<IActionResult> CreatePayableBatch(IFormFile file)
+    [HttpPost("Batch", Name = "ReceivePayableBatch")]
+    public async Task<IActionResult> ReceivePayableBatch(IFormFile file)
     {
         if (file.Length <= 0)
         {
@@ -52,7 +53,7 @@ public class PayableController(ILogger<PayableController> logger, ISender mediat
         var content = await streamReader.ReadToEndAsync();
         var createPayableCommands = JsonSerializer.Deserialize<List<CreatePayableCommand>>(content);
 
-        var command = new CreatePayableBatchCommand();
+        var command = new ReceivePayableBatchCommand();
 
         if (createPayableCommands == null)
         {
