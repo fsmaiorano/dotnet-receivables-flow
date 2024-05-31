@@ -1,3 +1,4 @@
+import os
 import json
 import uuid
 import psycopg2
@@ -40,5 +41,11 @@ for i in range(10000):
         "AssignorId": assignorid[0],
     })
 
-with open('docs/payables_batch.json', 'w') as f:
+# Check if the directory exists
+if not os.path.exists('batch'):
+    # If not, create the directory
+    os.makedirs('batch')
+
+# Now you can write to the file in the 'batch' directory
+with open('batch/payables_batch.json', 'w') as f:
     json.dump(data, f)
