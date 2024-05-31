@@ -42,10 +42,10 @@ for i in range(10000):
     })
 
 # Check if the directory exists
-if not os.path.exists('batch'):
+if not os.path.exists('./'):
     # If not, create the directory
-    os.makedirs('batch')
+    os.makedirs('./')
 
-# Now you can write to the file in the 'batch' directory
-with open('batch/payables_batch.json', 'w') as f:
+# Now you can write to the file in the '' directory
+with open('./payables_batch.json', 'w') as f:
     json.dump(data, f)

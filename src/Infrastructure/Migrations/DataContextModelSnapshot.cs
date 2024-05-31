@@ -138,6 +138,38 @@ namespace Infrastructure.Migrations
                     b.ToTable("Payables", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Entities.PayablesQueueEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("BatchId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("PayablesBatchQuantity")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PayablesProcessed")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PayablesProcessedError")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PayablesProcessedSuccess")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PayablesQueue");
+                });
+
             modelBuilder.Entity("Domain.Entities.PayableEntity", b =>
                 {
                     b.HasOne("Domain.Entities.AssignorEntity", "Assignor")

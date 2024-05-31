@@ -20,19 +20,19 @@ public record CreatePayableResponse
     public Guid Id { get; set; }
 }
 
-public sealed class CreatePayableHandler(ILogger<CreatePayableHandler> logger, IServiceProvider services)
+public sealed class CreatePayableHandler(ILogger<CreatePayableHandler> logger, IServiceScopeFactory serviceScopeFactory)
     : IRequestHandler<CreatePayableCommand, CreatePayableResponse>
 {
     public async Task<CreatePayableResponse> Handle(CreatePayableCommand request, CancellationToken cancellationToken)
     {
         var response = new CreatePayableResponse();
 
+        using var scope = serviceScopeFactory.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<IDataContext>();
+
         try
         {
             logger.LogInformation("Creating payable {@request}", request);
-
-            using var scope = services.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<IDataContext>();
 
             var payable = new PayableEntity
             {
@@ -49,7 +49,7 @@ public sealed class CreatePayableHandler(ILogger<CreatePayableHandler> logger, I
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error creating payable");
+            logger.LogError(ex, $"Error creating payable - {ex.Message}");
             throw;
         }
 

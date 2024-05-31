@@ -5,6 +5,7 @@ using CreatePayable;
 using Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 public record ProcessPayablesBatchCommand : IRequest<ProcessPayablesBatchCommandResponse>
@@ -20,9 +21,9 @@ public record ProcessPayablesBatchCommandResponse
 public sealed class
     ProcessPayableBatchHandler(
         ILogger<ProcessPayableBatchHandler> logger,
-        IDataContext context,
+        IServiceProvider serviceProvider,
         IConfiguration configuration,
-        IMediator mediator)
+        ISender mediator)
     : IRequestHandler<ProcessPayablesBatchCommand, ProcessPayablesBatchCommandResponse>
 {
     public async Task<ProcessPayablesBatchCommandResponse> Handle(ProcessPayablesBatchCommand request,
@@ -37,15 +38,13 @@ public sealed class
         var payableError = new List<CreatePayableCommand>();
         var payablesSuccess = new List<CreatePayableCommand>();
 
+        using var scope = serviceProvider.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<IDataContext>();
+        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+
         try
         {
             logger.LogInformation("Processing payable batch {@request}", request);
-
-            // Recebe lotes de 10.000
-            // Vai processar cada um dos lotes e salvar em uma tabela, com o total de registros, total de processados, total de sucessos e total de erros
-            // Os erros serão salvos em uma tabela de erros, identificando o lote e o registro que deu erro
-
-            // Processa os lotes
 
             foreach (var payable in request.Payables)
             {
@@ -53,11 +52,7 @@ public sealed class
 
                 try
                 {
-                    var createPayableCommand = new CreatePayableCommand
-                    {
-                        Value = payable.Value, EmissionDate = payable.EmissionDate, AssignorId = payable.AssignorId,
-                    };
-
+                    var createPayableCommand = payable with { EmissionDate = payable.EmissionDate.ToUniversalTime() };
                     var createPayableResponse = await mediator.Send(createPayableCommand, cancellationToken);
 
                     if (createPayableResponse.Id == Guid.Empty)
@@ -75,24 +70,23 @@ public sealed class
                 }
                 catch (Exception ex)
                 {
-                    errorCounter++;
                     logger.LogError(ex, "Error processing payable");
                 }
-
-                var payablesQueueEntity = new PayablesQueueEntity
-                {
-                    BatchId = request.Id,
-                    PayablesBatchQuantity = request.Payables.Count,
-                    PayablesProcessed = processedCounter,
-                    PayablesProcessedSuccess = successCounter,
-                    PayablesProcessedError = errorCounter,
-                };
-
-                context.PayablesQueue.Add(payablesQueueEntity);
-                await context.SaveChangesAsync(cancellationToken);
-
-                logger.LogInformation("Payable batch processed");
             }
+
+            var payablesQueueEntity = new PayablesQueueEntity
+            {
+                BatchId = request.Id,
+                PayablesBatchQuantity = request.Payables.Count,
+                PayablesProcessed = processedCounter,
+                PayablesProcessedSuccess = successCounter,
+                PayablesProcessedError = errorCounter,
+            };
+
+            context.PayablesQueue.Add(payablesQueueEntity);
+            await context.SaveChangesAsync(cancellationToken);
+
+            logger.LogInformation("Payable batch processed");
         }
         catch (Exception ex)
         {
