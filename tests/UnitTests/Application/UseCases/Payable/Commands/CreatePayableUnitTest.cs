@@ -7,6 +7,8 @@ using Moq;
 
 namespace UnitTests.Application.UseCases.Payable.Commands;
 
+using Microsoft.Extensions.DependencyInjection;
+
 [TestFixture]
 public class CreatePayableHandlerTests
 {
@@ -16,12 +18,12 @@ public class CreatePayableHandlerTests
         // Arrange
         var loggerMock = new Mock<ILogger<CreatePayableHandler>>();
         var contextMock = new Mock<IDataContext>();
-        var serviceProviderMock = new Mock<IServiceProvider>();
+        var serviceScopeMock = new Mock<IServiceScopeFactory>();
         var mockSetAssignor = new Mock<DbSet<AssignorEntity>>();
         contextMock.Setup(c => c.Assignors).Returns(mockSetAssignor.Object);
         var mockSetPayable = new Mock<DbSet<PayableEntity>>();
         contextMock.Setup(c => c.Payables).Returns(mockSetPayable.Object);
-        var handler = new CreatePayableHandler(loggerMock.Object, serviceProviderMock.Object);
+        var handler = new CreatePayableHandler(loggerMock.Object, serviceScopeMock.Object);
         var command = new CreatePayableCommand
         {
             Value = 100.0f, EmissionDate = DateTime.Now, AssignorId = Guid.NewGuid()
@@ -41,13 +43,12 @@ public class CreatePayableHandlerTests
         // Arrange
         var loggerMock = new Mock<ILogger<CreatePayableHandler>>();
         var contextMock = new Mock<IDataContext>();
-        var serviceProviderMock = new Mock<IServiceProvider>();
-        contextMock.Setup(c => c.SaveChangesAsync(It.IsAny<CancellationToken>())).Throws<Exception>();
+        var serviceScopeMock = new Mock<IServiceScopeFactory>();
         var mockSetAssignor = new Mock<DbSet<AssignorEntity>>();
         contextMock.Setup(c => c.Assignors).Returns(mockSetAssignor.Object);
         var mockSetPayable = new Mock<DbSet<PayableEntity>>();
         contextMock.Setup(c => c.Payables).Returns(mockSetPayable.Object);
-        var handler = new CreatePayableHandler(loggerMock.Object, serviceProviderMock.Object);
+        var handler = new CreatePayableHandler(loggerMock.Object, serviceScopeMock.Object);
         var command = new CreatePayableCommand
         {
             Value = 100.0f, EmissionDate = DateTime.Now, AssignorId = Guid.NewGuid()
