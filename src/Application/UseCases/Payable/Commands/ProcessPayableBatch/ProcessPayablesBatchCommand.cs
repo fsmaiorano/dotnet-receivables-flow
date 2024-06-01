@@ -16,6 +16,10 @@ public record ProcessPayablesBatchCommand : IRequest<ProcessPayablesBatchCommand
 
 public record ProcessPayablesBatchCommandResponse
 {
+    public Guid BatchId { get; set; }
+    public List<CreatePayableCommand> Processed { get; set; }
+    public List<CreatePayableCommand> Success { get; set; }
+    public List<CreatePayableCommand> Error { get; set; }
 }
 
 public sealed class
@@ -46,6 +50,8 @@ public sealed class
         {
             logger.LogInformation("Processing payable batch {@request}", request);
 
+            response.BatchId = request.Id;
+
             foreach (var payable in request.Payables)
             {
                 processedCounter++;
@@ -59,6 +65,7 @@ public sealed class
                     {
                         errorCounter++;
                         payableError.Add(payable);
+                        logger.LogError("Error processing payable {@payable}", payable);
                     }
                     else
                     {
@@ -85,6 +92,10 @@ public sealed class
 
             context.PayablesQueue.Add(payablesQueueEntity);
             await context.SaveChangesAsync(cancellationToken);
+
+            response.Processed = payableProcessed;
+            response.Success = payablesSuccess;
+            response.Error = payableError;
 
             logger.LogInformation("Payable batch processed");
         }
