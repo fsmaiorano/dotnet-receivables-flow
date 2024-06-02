@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Application;
 
+using Common.Interfaces;
 using Common.Queue;
 
 public static class ConfigureServices
@@ -25,5 +26,6 @@ public static class ConfigureServices
 
         services.AddSingleton<RConsumer>();
         services.AddHostedService<Worker>();
+        services.AddTransient<ISendEmail>();
     }
 }

@@ -7,6 +7,7 @@ using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Application.Common.Utils;
 
 public record ProcessPayablesBatchCommand : IRequest<ProcessPayablesBatchCommandResponse>
 {
@@ -96,6 +97,9 @@ public sealed class
             response.Processed = payableProcessed;
             response.Success = payablesSuccess;
             response.Error = payableError;
+
+            SendMail.Send(configuration["Email:To"], "Payable batch processed",
+                $"Batch {request.Id} processed with {successCounter} success and {errorCounter} errors");
 
             logger.LogInformation("Payable batch processed");
         }
