@@ -1,83 +1,99 @@
-## 💻 O Problema
+## 🔍 Motivation
 
-Um cliente da Bankme solicitou uma nova funcionalidade, relacionada a recebíveis.
+This project was created to test the skills of a developer and I decided to use it as a way to improve my skills.
 
-Todos os dias esse cliente movimenta vários recebíveis, e nosso time de operações estava ficando maluco tendo que cadastrar tudo isso de forma manual!
+The original challenge was created by [Aprovame](https://aprovame.com/) and ask to use Javascript, but I made it using .NET 😆
 
-Os recebíveis são representações digitais de um documento que simula uma dívida a ser recebida. E para Bankme, é importante ter essas informações como parte do fluxo comercial que temos com este cliente.
+## 🚀 Technologies
 
-### Estrutura de um recebível
+- NET 8
+- Entity Framework Core
+- Identity
+- PostgreSQL
+- Docker / Docker Compose / Podman (I use this.)
+- RabbitMQ
+- NUnit3
 
-| CAMPO        | TIPO          | DESCRIÇÃO                                 |
-|--------------|---------------|-------------------------------------------|
-| id           | string (UUID) | É a identificação de um recebível.        |
-| value        | float         | É o valor do recebível.                   |
-| emissionDate | date          | É a data de emissão do recebível.         |
-| assignor     | string (UUID) | Representa a identificação de um cedente. |
+## 💻 The Problem
 
-### Estrutrua de um cedente
+A client of Bankme requested a new feature related to receivables.
 
-| CAMPO    | TIPO          | DESCRIÇÃO                             |
-|----------|---------------|---------------------------------------|
-| id       | string (UUID) | É a identificação de um cedente.      |
-| document | string(30)    | É o documento CPF ou CNPJ do cedente. |
-| email    | string(140)   | É o email do cedente.                 |
-| phone    | string(20)    | É o telefone do cedente.              |
-| name     | string(140)   | É a nome ou razão social do cedente.  |
+Every day, this client processes multiple receivables, and our operations team was going crazy having to register all this manually!
+
+Receivables are digital representations of a document that simulates a debt to be received. For Bankme, it is important to have this information as part of the commercial flow we have with this client.
+
+### Structure of a Receivable
+
+| FIELD        | TYPE          | DESCRIPTION                             |
+|--------------|---------------|-----------------------------------------|
+| id           | string (UUID) | The identification of a receivable.     |
+| value        | float         | The value of the receivable.            |
+| emissionDate | date          | The emission date of the receivable.    |
+| assignor     | string (UUID) | The identification of an assignor.      |
+
+### Structure of an Assignor
+
+| FIELD    | TYPE          | DESCRIPTION                             |
+|----------|---------------|-----------------------------------------|
+| id       | string (UUID) | The identification of an assignor.      |
+| document | string(30)    | The CPF or CNPJ document of the assignor.|
+| email    | string(140)   | The email of the assignor.              |
+| phone    | string(20)    | The phone number of the assignor.       |
+| name     | string(140)   | The name or corporate name of the assignor.|
 
 ## 💾 Back-end
 
-### Nível 1 - Validação
+### Level 1 - Validation
 
-Implemente uma API utilizando NestJS que receba dados de um recebível e de um cedente.
+Implement an API using NestJS that receives data of a receivable and an assignor.
 
-A rota para este cadastro é:
+The route for this registration is:
 
 `POST /integrations/payable`
 
-Essa rota deverá receber todas as informações. É importante garantir a validação destes dados:
+This route should receive all information. It is important to ensure the validation of this data:
 
-1. Nenhum campo pode ser nulo;
-2. Os ids devem ser do tipo UUID;
-3. As strings não podem ter caracteres a mais do que foi definido em sua estrutura;
+1. No field can be null;
+2. IDs must be of type UUID;
+3. Strings cannot have more characters than defined in their structure;
 
-Se algum campo não estiver preenchido corretamente, deve-se retornar uma mensagem para o usuário mostrando qual o problema foi encontrado em qual campo.
+If any field is not filled out correctly, a message should be returned to the user showing which problem was found in which field.
 
-Se todos os dados estiverem validados. Apenas retorne todos os dados em um formato JSON.
+If all data is validated, just return all the data in JSON format.
 
-### Nível 2 - Persistência
+### Level 2 - Persistence
 
-Utilize o Prisma, para incluir um novo banco de dados SQLite.
+Use Prisma to include a new SQLite database.
 
-Crie a estrutura de acordo com o que foi definido.
+Create the structure according to what was defined.
 
-Caso os dados estejam válidos, cadastre-os.
+If the data is valid, register them.
 
-Crie 2 novas rotas:
+Create 2 new routes:
 
 `GET /integrations/payable/:id`
 
 `GET /integrations/assignor/:id`
 
-Para que seja possível retornar pagáveis e cedentes de forma independete.
+To make it possible to return payables and assignors independently.
 
-Inclua também rotas para as outras operações:
+Also include routes for other operations:
 
-- Edição;
-- Exclusão;
-- Cadastro;
+- Edit;
+- Delete;
+- Register;
 
-### Nível 3 - Testes
+### Level 3 - Tests
 
-Crie testes unitários para cada arquivo da aplicação. Para cada nova implementação a seguir, também deve-se criar os testes.
+Create unit tests for each file of the application. For each new implementation, tests must also be created.
 
-### Nível 4 - Autenticação
+### Level 4 - Authentication
 
-Inclua um sistema de autenticação em todas as rotas.
+Include an authentication system in all routes.
 
-Para isso, crie uma nova rota:
+For this, create a new route:
 
-`POST /integrations/auth` que deve receber:
+`POST /integrations/auth` that should receive:
 
 ```json
 {
@@ -86,103 +102,102 @@ Para isso, crie uma nova rota:
 }
 ```
 
-Com essas credenciais o endpoint deverá retornar um JWT com o tempo de expiração de 1 minuto.
+With these credentials, the endpoint should return a JWT with an expiration time of 1 minute.
 
-Reescreva as regras de todas as outras rotas para que o JWT seja enviado como parâmetro do `Header` da requisição.
+Rewrite the rules of all other routes so that the JWT is sent as a parameter in the request `Header`.
 
-Se o JWT estiver válido, então os dados devem ser mostrados, caso contrário, deve-se mostrar uma mensagem de "Não autorizado".
+If the JWT is valid, then the data should be shown; otherwise, a "Not authorized" message should be displayed.
 
-### Nível 5 - Gerenciamento de permissões
+### Level 5 - Permission Management
 
-Agora, crie um sistema de gerenciamento de permissões.
+Now, create a permission management system.
 
-Crie um novo cadastro de permissões. Esse cadastro deve armazenar: `login` e `password`.
+Create a new permissions registration. This registration must store: `login` and `password`.
 
-Refatore o endpoint de autenticação para que sempre se gere JWTs se login e senha estiverem cadastrados no Banco de Dados.
+Refactor the authentication endpoint so that JWTs are always generated if login and password are registered in the database.
 
-### Nível 6 - Infra e Doc
+### Level 6 - Infra and Documentation
 
-Crie um `Dockerfile` para sua API.
+Create a `Dockerfile` for your API.
 
-Crie um `docker-compose.yaml` para iniciar o seu projeto.
+Create a `docker-compose.yaml` to start your project.
 
-Documente tudo o que foi feito até aqui:
+Document everything that has been done so far:
 
-- Como preparar o ambiente;
-- Como instalar as dependência;
-- Como rodar o projeto;
+- How to prepare the environment;
+- How to install dependencies;
+- How to run the project;
 
-### Nível 7 - Lotes
+### Level 7 - Batches
 
-Crie um novo recurso de processamento de pagáveis por lotes.
+Create a new feature for batch processing of payables.
 
-A ideia é que o cliente possa enviar um GRANDE número de pagáveis de uma única vez. E isso, não poderá ser processado de forma síncrona.
+The idea is that the client can send a LARGE number of payables at once. This cannot be processed synchronously.
 
-Crie um novo endpoint:
+Create a new endpoint:
 
-`POST integrations/payable/batch`
+`POST /integrations/payable/batch`
 
-Neste endpoint deve ser possível receber lotes de até 10.000 pagáveis.
+In this endpoint, it should be possible to receive batches of up to 10,000 payables.
 
-Ao receber todos os pagáveis, deve-se postá-los em uma fila.
+Upon receiving all payables, they should be posted to a queue.
 
-Crie um consumidor para esta fila que deverá pegar pagável por pagável, criar seu registro no banco de dados, e ao final do processamento do lote enviar um e-mail de lote processado, com o número de sucesso e falhas.
+Create a consumer for this queue that should take each payable, create its record in the database, and at the end of the batch processing, send an email of the processed batch, with the number of successes and failures.
 
-### Nível 8 - Resiliência
+### Level 8 - Resilience
 
-Caso não seja possível processar algum ítem do lote, coloque-o novamente na fila. Isso deve ocorrer por até 4 vezes. Depois, esse ítem deve ir para uma "Fila Morta" e um e-mail deve ser disparado para o time de operações.
+If it is not possible to process an item from the batch, put it back in the queue. This should occur up to 4 times. After that, this item should go to a "Dead Queue" and an email should be sent to the operations team.
 
-**### Nível 9 - Cloud**
+### Level 9 - Cloud
 
-Crie uma pipeline de deploy da aplicação em alguma estrutura de Cloud. (AWS, Google, Azure...)
+Create a deployment pipeline of the application in some Cloud structure (AWS, Google, Azure...).
 
-### Nível 10 - Infra as a Code
+### Level 10 - Infrastructure as Code
 
-Crie uma estrutura em terraforma que monte a infra-estrutura desejada.
+Create a structure in Terraform that sets up the desired infrastructure.
 
 ## 🖥️ Front-end
 
-### Nível 1 - Cadastro
+### Level 1 - Registration
 
-Crie uma interface na qual é possível cadastrar os pagáveis.
+Create an interface where it is possible to register the payables.
 
-É importante que sua interface previna o cadastro de campos vazios, ou que não estejam nas regras definidas anteriormente.
+It is important that your interface prevents the registration of empty fields or fields that do not follow the defined rules.
 
-Exiba o pagável cadastrado em uma nova tela.
+Display the registered payable on a new screen.
 
-### Nível 2 - Conectando na API
+### Level 2 - Connecting to the API
 
-Conecte a seu Front-end a API que foi criada, e faça o cadastro de um pagável refletir na sua API.
+Connect your Front-end to the created API, and make the registration of a payable reflect in your API.
 
-Faça também uma tela para cadastro do cedente.
+Also, create a screen for the registration of the assignor.
 
-Altere o cadastro inicial para que o campo `assignor` seja um `combobox` no qual seja possível selecionar um cedente.
+Change the initial registration so that the `assignor` field is a `combobox` where it is possible to select an assignor.
 
-### Nível 3 - Listando
+### Level 3 - Listing
 
-Agora faça um sistema de listagens de pagáveis. Mostrando apenas: `id`, `value` e `emissionDate`.
+Now, create a listing system for payables, showing only: `id`, `value`, and `emissionDate`.
 
-Para cada ítem da lista, coloque um link que mostra os detalhes do pagável.
+For each item in the list, place a link that shows the details of the payable.
 
-Além disso, coloque opções de editar e excluir.
+Additionally, include options to edit and delete.
 
-Nessa página de detalhes, inclua um novo link para exibir os dados do cedente.
+In this detail page, include a new link to display the assignor's data.
 
-Todos os dados devem vir da API.
+All data should come from the API.
 
-### Nível 4 - Autenticação
+### Level 4 - Authentication
 
-Implemente agora o sistema de login e senha para poder acessar as suas rotas de forma autenticada.
+Now implement the login and password system to access your routes in an authenticated way.
 
-Armazene o token no `localStorage` do seu navegador.
+Store the token in your browser's `localStorage`.
 
-Caso o token expire, redirecione o usuário para a página de login.
+If the token expires, redirect the user to the login page.
 
-### Nível 5 - Testes
+### Level 5 - Tests
 
-Crie testes para sua aplicação Front-end.
+Create tests for your Front-end application.
 
-
+```shell
 python.exe -m pip install --upgrade pip
-
-
+```
