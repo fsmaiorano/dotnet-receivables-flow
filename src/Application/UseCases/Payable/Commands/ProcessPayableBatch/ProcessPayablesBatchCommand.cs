@@ -1,5 +1,6 @@
 namespace Application.UseCases.Payable.Commands.ProcessPayableBatch;
 
+using System.Text.Json;
 using Common.Interfaces;
 using CreatePayable;
 using Domain.Entities;
@@ -13,6 +14,7 @@ using Common.Queue;
 public record ProcessPayablesBatchCommand : IRequest<ProcessPayablesBatchCommandResponse>
 {
     public required Guid Id { get; set; }
+    public required QueueTypeEnum QueueType { get; set; }
     public required List<CreatePayableCommand> Payables { get; set; }
 }
 
@@ -99,12 +101,12 @@ public sealed class
             response.Success = payablesSuccess;
             response.Error = payableError;
 
-            SendMail.Send(configuration["AdministratorEmail"]!, "Payable batch processed",
-                $"Batch {request.Id} processed with {successCounter} success and {errorCounter} errors");
+            // SendMail.Send(configuration["AdministratorEmail"]!, "Payable batch processed",
+            //     $"Batch {request.Id} processed with {successCounter} success and {errorCounter} errors");
 
             if (payableError.Count is not 0)
             {
-                // Send to retry queue
+                await HandleQueueError(request.QueueType, payableError);
             }
 
             logger.LogInformation("Payable batch processed");
@@ -116,5 +118,43 @@ public sealed class
         }
 
         return response;
+    }
+
+    private Task HandleQueueError(QueueTypeEnum queueType, List<CreatePayableCommand> payables)
+    {
+        var rproducer = new RProducer(configuration);
+        var payableBatchQueryModel = new ProcessPayablesBatchCommand
+        {
+            Id = Guid.NewGuid(), Payables = payables, QueueType = QueueTypeEnum.Payable,
+        };
+
+        switch (queueType)
+        {
+            case QueueTypeEnum.PayableRetry1:
+                payableBatchQueryModel.QueueType = QueueTypeEnum.PayableRetry2;
+                break;
+            case QueueTypeEnum.PayableRetry2:
+                payableBatchQueryModel.QueueType = QueueTypeEnum.PayableRetry3;
+                break;
+            case QueueTypeEnum.PayableRetry3:
+                payableBatchQueryModel.QueueType = QueueTypeEnum.PayableRetry4;
+                break;
+            case QueueTypeEnum.PayableRetry4:
+                payableBatchQueryModel.QueueType = QueueTypeEnum.PayableDead;
+                break;
+            case QueueTypeEnum.PayableDead:
+                payableBatchQueryModel.QueueType = QueueTypeEnum.PayableDead;
+                break;
+            case QueueTypeEnum.Payable:
+                payableBatchQueryModel.QueueType = QueueTypeEnum.PayableRetry1;
+                break;
+            default:
+                break;
+        }
+
+        rproducer.PublishMessage("", JsonSerializer.Serialize(payableBatchQueryModel));
+        rproducer.Close();
+
+        return Task.CompletedTask;
     }
 }

@@ -41,7 +41,7 @@ public sealed class
             {
                 var batch = request.Payables.Skip(i * batchSize).Take(batchSize).ToList();
                 var rproducer = new RProducer(configuration);
-                var payableBatchQueryModel = new ProcessPayablesBatchCommand { Id = Guid.NewGuid(), Payables = batch };
+                var payableBatchQueryModel = new ProcessPayablesBatchCommand { Id = Guid.NewGuid(), Payables = batch, QueueType = QueueTypeEnum.Payable};
                 rproducer.PublishMessage("", JsonSerializer.Serialize(payableBatchQueryModel));
                 rproducer.Close();
             }

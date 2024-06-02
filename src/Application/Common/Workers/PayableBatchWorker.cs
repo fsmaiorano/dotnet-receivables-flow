@@ -78,6 +78,11 @@ public class PayableBatchWorker : BackgroundService
             "Waiting message... {time}", DateTimeOffset.Now);
 
         consumer.ConsumeMessage();
+        retryConsumer1.ConsumeMessage();
+        retryConsumer2.ConsumeMessage();
+        retryConsumer3.ConsumeMessage();
+        retryConsumer4.ConsumeMessage();
+        // deadConsumer.ConsumeMessage();
     }
 
     private void ProcessMessage(string message)
