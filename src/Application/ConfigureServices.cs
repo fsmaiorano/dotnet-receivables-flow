@@ -24,8 +24,15 @@ public static class ConfigureServices
             // cfg.AddOpenBehavior(typeof(AuthorizationBehaviour<,>));
         });
 
-        services.AddSingleton<RConsumer>();
-        services.AddHostedService<Worker>();
-        services.AddTransient<ISendEmail>();
+        // services.AddSingleton<RConsumer>();
+
+        services.AddSingleton<PayableQueueConsumer>();
+        services.AddSingleton<PayableDeadQueueConsumer>();
+        services.AddSingleton<PayableRetryQueueConsumer1>();
+        services.AddSingleton<PayableRetryQueueConsumer2>();
+        services.AddSingleton<PayableRetryQueueConsumer3>();
+        services.AddSingleton<PayableRetryQueueConsumer4>();
+
+        services.AddHostedService<PayableBatchWorker>();
     }
 }

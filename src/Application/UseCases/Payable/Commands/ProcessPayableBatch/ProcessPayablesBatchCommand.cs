@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Application.Common.Utils;
+using Common.Queue;
 
 public record ProcessPayablesBatchCommand : IRequest<ProcessPayablesBatchCommandResponse>
 {
@@ -18,9 +19,9 @@ public record ProcessPayablesBatchCommand : IRequest<ProcessPayablesBatchCommand
 public record ProcessPayablesBatchCommandResponse
 {
     public Guid BatchId { get; set; }
-    public List<CreatePayableCommand> Processed { get; set; }
-    public List<CreatePayableCommand> Success { get; set; }
-    public List<CreatePayableCommand> Error { get; set; }
+    public List<CreatePayableCommand>? Processed { get; set; }
+    public List<CreatePayableCommand>? Success { get; set; }
+    public List<CreatePayableCommand>? Error { get; set; }
 }
 
 public sealed class
@@ -98,8 +99,13 @@ public sealed class
             response.Success = payablesSuccess;
             response.Error = payableError;
 
-            SendMail.Send(configuration["Email:To"], "Payable batch processed",
+            SendMail.Send(configuration["AdministratorEmail"]!, "Payable batch processed",
                 $"Batch {request.Id} processed with {successCounter} success and {errorCounter} errors");
+
+            if (payableError.Count is not 0)
+            {
+                // Send to retry queue
+            }
 
             logger.LogInformation("Payable batch processed");
         }

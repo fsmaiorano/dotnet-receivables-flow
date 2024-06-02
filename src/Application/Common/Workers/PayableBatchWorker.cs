@@ -10,26 +10,55 @@ namespace Application.Common.Workers;
 using Queue;
 using UseCases.Payable.Commands.ProcessPayableBatch;
 
-public class Worker : BackgroundService
+public class PayableBatchWorker : BackgroundService
 {
-    private readonly ILogger<Worker> logger;
+    private readonly ILogger<PayableBatchWorker> logger;
     private readonly int intervalMessageWorkerActive;
     private readonly IConfiguration configuration;
-    private readonly RConsumer consumer;
+    private readonly PayableQueueConsumer consumer;
+    private readonly PayableRetryQueueConsumer1 retryConsumer1;
+    private readonly PayableRetryQueueConsumer2 retryConsumer2;
+    private readonly PayableRetryQueueConsumer3 retryConsumer3;
+    private readonly PayableRetryQueueConsumer4 retryConsumer4;
+    private readonly PayableDeadQueueConsumer deadConsumer;
 
-    public Worker(ILogger<Worker> logger,
+    public PayableBatchWorker(ILogger<PayableBatchWorker> logger,
         IServiceProvider services,
         IConfiguration configuration,
-        RConsumer consumer)
+        PayableQueueConsumer consumer, PayableRetryQueueConsumer1 retryConsumer1,
+        PayableRetryQueueConsumer2 retryConsumer2, PayableRetryQueueConsumer3 retryConsumer3,
+        PayableRetryQueueConsumer4 retryConsumer4, PayableDeadQueueConsumer deadConsumer)
     {
         this.logger = logger;
-        this.consumer = consumer;
         intervalMessageWorkerActive = configuration.GetValue<int>("IntervalMessageWorkerActive");
+
+        this.consumer = consumer;
+        this.retryConsumer1 = retryConsumer1;
+        this.retryConsumer2 = retryConsumer2;
+        this.retryConsumer3 = retryConsumer3;
+        this.retryConsumer4 = retryConsumer4;
+        this.deadConsumer = deadConsumer;
+
         Services = services;
         this.configuration = configuration;
 
         this.consumer = consumer;
         this.consumer.OnMessageReceived += ProcessMessage;
+
+        this.retryConsumer1 = retryConsumer1;
+        this.retryConsumer1.OnMessageReceived += ProcessMessage;
+
+        this.retryConsumer2 = retryConsumer2;
+        this.retryConsumer2.OnMessageReceived += ProcessMessage;
+
+        this.retryConsumer3 = retryConsumer3;
+        this.retryConsumer3.OnMessageReceived += ProcessMessage;
+
+        this.retryConsumer4 = retryConsumer4;
+        this.retryConsumer4.OnMessageReceived += ProcessMessage;
+
+        this.deadConsumer = deadConsumer;
+        this.deadConsumer.OnMessageReceived += ProcessMessage;
     }
 
     private IServiceProvider Services { get; }
