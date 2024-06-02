@@ -2,6 +2,9 @@
 
 This project was created to test the skills of a developer and I decided to use it as a way to improve my skills.
 
+The backend was implemented at Level 8.
+The frontend will be implemented soon.
+
 The original challenge was created by [Aprovame](https://aprovame.com/) and ask to use Javascript, but I made it using .NET 😆
 
 ## 🚀 Technologies
@@ -21,6 +24,18 @@ A client of Bankme requested a new feature related to receivables.
 Every day, this client processes multiple receivables, and our operations team was going crazy having to register all this manually!
 
 Receivables are digital representations of a document that simulates a debt to be received. For Bankme, it is important to have this information as part of the commercial flow we have with this client.
+
+### Requirements
+
+- NET 8
+- Docker / Podman
+- Python 3 (to generate batches)
+
+In docs folder, you can find python script and the requirements.txt to generate batches.
+
+```shell
+pip install --upgrade pip
+```
 
 ### Structure of a Receivable
 
@@ -198,6 +213,3 @@ If the token expires, redirect the user to the login page.
 
 Create tests for your Front-end application.
 
-```shell
-python.exe -m pip install --upgrade pip
-```
